@@ -1,4 +1,12 @@
-Assets/Plugins
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Rr]elease/
+[Rr]eleases/
+
+Assets/Plugins/
 
 
 # Builds
