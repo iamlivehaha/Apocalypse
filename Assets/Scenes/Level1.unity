@@ -501,6 +501,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &708248442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1930161709796087457, guid: 5ca814cc7cc1a2341a5dcbea0eccdf49,
+    type: 3}
+  m_PrefabInstance: {fileID: 653492887}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &765842443 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 314096895751063241, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
@@ -583,7 +595,7 @@ PrefabInstance:
         type: 3}
       propertyPath: skeletonAnimation
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 708248442}
     - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_forceCrouchVelocity
@@ -593,6 +605,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_airControl
       value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 314096895834566093, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 314096895834566099, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
