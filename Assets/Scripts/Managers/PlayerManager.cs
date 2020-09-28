@@ -1,4 +1,5 @@
-﻿using StarPlatinum.Base;
+﻿using Assets.Scripts.GamePlay.CharacterController;
+using StarPlatinum.Base;
 
 namespace Assets.Scripts.Managers
 {

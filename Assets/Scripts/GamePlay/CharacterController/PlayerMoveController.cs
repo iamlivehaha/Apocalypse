@@ -1,203 +1,342 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Managers;
 using GamePlay;
 using UnityEngine;
+using UnityEngine.Events;
+using Spine.Unity;
 
-public class PlayerMoveController : MonoBehaviour
+namespace Assets.Scripts.GamePlay.CharacterController
 {
-    [Header("Public, Physics Property")]
-    public float m_moveSpeed = 5f;
-    public float m_jumpForce = 20f;
-    public float m_jumpTime = 1.2f;
-    public float m_rayDistance = 2f;
-
-    [Header("Public, Interactive Property")]
-    public float m_showInteractiveUIRadius = 1.0f;
-    public float m_interactableRadius = 0.5f;
-    public float m_interactableRaycastAngle = 90;
-    public float m_interactableRaycastAngleInterval = 10;
-    public LayerMask m_interactableLayer;
-
-
-    [Header("Private, Physics Data")]
-    [SerializeField]
-    private bool m_isInitFaceRight = false;
-    [SerializeField]
-    private bool m_isFaceRight = false;
-    [SerializeField]
-    private Animator m_animator;
-
-
-
-    //private Rigidbody2D m_rigidbody2D;
-    [SerializeField]
-    private BoxCollider2D m_boxCollider2D;
-
-    private bool m_isMove = true;
-    private bool m_isInteractByUI = false;
-
-    private int count = 0;// 测试计数 Delete in future
-
-    //private collider detection
-    static int maxColliders = 10;
-    Collider[] hitColliders = new Collider[maxColliders];
-    Dictionary<Collider, float> colliders = new Dictionary<Collider, float>();
-
-    Collider interactCollider = null;
-    float smallestLength = 10000;
-
-    void Start()
+    [RequireComponent(typeof(UnityEngine.CharacterController))]
+    public class PlayerMoveController : MonoBehaviour
     {
-        //m_rigidbody2D = transform.GetComponent<Rigidbody2D> ();
-        m_boxCollider2D = transform.GetComponent<BoxCollider2D>();
-        if (m_boxCollider2D == null)
+        public enum CharacterState
         {
-            Debug.LogError("Player Collision Is Lost.");
-        }
-        m_animator = transform.GetComponent<Animator>();
-        if (m_animator == null)
-        {
-            Debug.LogError("Player Animator Is Lost.");
-        }
-        else
-        {
-            m_animator.SetBool("IsFaceLeft", !m_isFaceRight);
+            None,
+            Idle,
+            Walk,
+            Run,
+            Crouch,
+            Rise,
+            Fall,
+            Attack
         }
 
-        PlayerManager.Instance().SetMonoMoveController(this);
-        //CameraService.Instance.SetTarget(gameObject);
-        count = 0;
+        [Header("Components")]
+        public UnityEngine.CharacterController m_controller;
 
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        #region Check Collision
-        int numColliders = Physics.OverlapSphereNonAlloc(transform.position, m_interactableRadius, hitColliders, m_interactableLayer.value);
-        //Debug.Log ("Num of Collisions: " + numColliders);
-        for (int i = 0; i < numColliders; i++)
+        [Header("Public, Physics Property")]
+        public float m_walkSpeed = 5f;
+        public float m_runSpeed = 7f;
+        public float m_gravityScale = 6.6f;
+        public float m_rayDistance = 2f;
+
+        [Header("Jumping")]
+        public float m_jumpSpeed = 25;
+        public float m_minimumJumpDuration = 0.5f;
+        public float m_jumpInterruptFactor = 0.5f;
+        public float m_forceCrouchVelocity = 25;
+        public float m_forceCrouchDuration = 0.5f;
+        public float m_airControl = 0.8f;
+        public float m_crouchControl = 0.5f;
+
+        [Header("Animation")]
+        public Animator m_animator;
+
+        [Header("Public, Interactive Property")]
+        public float m_showInteractiveUIRadius = 1.0f;
+        public float m_interactableRadius = 0.5f;
+        public float m_interactableRaycastAngle = 90;
+        public float m_interactableRaycastAngleInterval = 10;
+        public LayerMask m_interactableLayer;
+
+        //Temp variate
+        // Events
+        public event UnityAction OnJump, OnLand, OnHardLand;
+
+        private bool m_isMove = true;
+        private bool m_isInteractByUI = false;
+
+        public Vector2 input = default(Vector2);
+        public Vector3 velocity = default(Vector3);
+        float minimumJumpEndTime = 0;
+        float forceCrouchEndTime;
+
+        //Mutex control
+        //bool isGrounded = false;
+        bool wasGrounded = false;
+
+        public CharacterState previousState, currentState;
+
+
+        //private collider detection
+        static int maxColliders = 10;
+        Collider[] hitColliders = new Collider[maxColliders];
+        Dictionary<Collider, float> colliders = new Dictionary<Collider, float>();
+
+        Collider interactCollider = null;
+        float smallestLength = 10000;
+
+        void Start()
         {
-            if (hitColliders[i].CompareTag(InteractiveObject.INTERACTABLE_TAG))
+            m_controller = GetComponent<UnityEngine.CharacterController>();
+            m_animator = transform.Find("Visuals/Creature").GetComponent<Animator>();
+        }
+        // Update is called once per frame
+        void Update()
+        {
+            #region Check Collision
+            int numColliders = Physics.OverlapSphereNonAlloc(transform.position, m_interactableRadius, hitColliders, m_interactableLayer.value);
+            //Debug.Log ("Num of Collisions: " + numColliders);
+            for (int i = 0; i < numColliders; i++)
             {
-                colliders.Add(hitColliders[i], Vector3.SqrMagnitude(hitColliders[i].transform.position - transform.position));
+                if (hitColliders[i].CompareTag(InteractiveObject.INTERACTABLE_TAG))
+                {
+                    colliders.Add(hitColliders[i], Vector3.SqrMagnitude(hitColliders[i].transform.position - transform.position));
+                }
+            }
+            foreach (var pair in colliders)
+            {
+                if (pair.Value < smallestLength)
+                {
+                    smallestLength = pair.Value;
+                    interactCollider = pair.Key;
+                }
+            }
+
+            if (interactCollider != null)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            #endregion
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // 显示UI
+            }
+
+
+        }
+
+
+        void FixedUpdate()
+        {
+            if (!m_isMove)// 不能进行移动
+            {
+                return;
+            }
+
+            float dt = Time.fixedDeltaTime;
+            bool isGrounded = m_controller.isGrounded;
+            bool landed = !wasGrounded && isGrounded;//Mutex control
+
+            // Dummy input.
+            input.x = Input.GetAxis("Horizontal");
+            input.y = Input.GetAxis("Vertical");
+            bool inputJumpStop = Input.GetButtonUp("Jump");
+            bool inputJumpStart = Input.GetButtonDown("Jump");
+            bool doCrouch = (isGrounded && input.y < -0.5f) || (forceCrouchEndTime > Time.time);
+            bool doJumpInterrupt = false;
+            bool doJump = false;
+            bool hardLand = false;
+
+            //do Crouch
+            if (landed)
+            {
+                if (-velocity.y > m_forceCrouchVelocity)
+                {
+                    hardLand = true;
+                    doCrouch = true;
+                    forceCrouchEndTime = Time.time + m_forceCrouchDuration;
+                }
+            }
+            //do jump 
+            if (!doCrouch)//check the mutex
+            {
+                if (isGrounded)// do jump in ground
+                {
+                    if (inputJumpStart)
+                    {
+                        doJump = true;
+                    }
+                }
+                else//stop jump in the air
+                {
+                    doJumpInterrupt = inputJumpStop && Time.time < minimumJumpEndTime;
+                }
+            }
+            // Dummy physics and controller using UnityEngine.CharacterController.
+            //gravity ~ -9.8N/kg => gravity velocity ~ -9.8m/s
+            Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * dt;
+
+            if (doJump)// add jump velocity
+            {
+                velocity.y = m_jumpSpeed;
+                minimumJumpEndTime = Time.time + m_minimumJumpDuration;
+            }
+            else if (doJumpInterrupt)// jump velocity regresses
+            {
+                if (velocity.y > 0)
+                    velocity.y *= m_jumpInterruptFactor;
+            }
+            //Move Horizontal and set the air control 
+            velocity.x = 0;
+            if (!doCrouch)
+            {
+                if (Math.Abs(input.x) > 0.01f)
+                {
+                    velocity.x = (isGrounded ? 1 : m_airControl) * Mathf.Abs(input.x) > 0.6f ? m_runSpeed : m_walkSpeed;
+                    velocity.x *= Mathf.Sign(input.x);//return the +- symbol
+                }
+            }
+            else if (doCrouch)
+            {
+                if (Math.Abs(input.x) > 0.01f)
+                {
+                    velocity.x = m_crouchControl * m_walkSpeed;
+                    velocity.x *= Mathf.Sign(input.x);//return the +- symbol
+                }
+            }
+
+            //Update the Velocity.Y and move
+            if (!isGrounded)
+            {
+                if (wasGrounded)//clear the velocity if player was grounded right now
+                {
+                    if (velocity.y < 0)
+                        velocity.y = 0;
+                }
+                else // add the gravityDeltaVelcity
+                {
+                    velocity += gravityDeltaVelocity;
+                }
+            }
+            m_animator.SetFloat("input.x", Math.Abs(input.x));
+            //m_animator.SetBool("dojumpInterupt",doJumpInterrupt);
+            m_controller.Move(velocity * dt);
+            wasGrounded = isGrounded;
+
+            // Determine and store character state
+            if (isGrounded)
+            {
+                if (doCrouch)
+                {
+                    currentState = CharacterState.Crouch;
+                }
+                else
+                {
+                    if (input.x == 0)
+                        currentState = CharacterState.Idle;
+                    else
+                        currentState = Mathf.Abs(input.x) > 0.6f ? CharacterState.Run : CharacterState.Walk;
+                }
+            }
+            else
+            {
+                currentState = velocity.y > 0 ? CharacterState.Rise : CharacterState.Fall;
+            }
+
+            bool stateChanged = previousState != currentState;//semaphore
+
+            //Debug.log for state change
+            //if (stateChanged)
+            //{
+            //    Debug.Log(previousState + "transfer to" + currentState);
+            //}
+
+            previousState = currentState;
+
+            // Animation
+            // Do not modify character parameters or state in this phase. Just read them.
+            // Detect changes in state, and communicate with animation handle if it changes.
+            if (stateChanged)
+            {
+                HandleStateChanged();
+            }
+
+
+            //Filp X 
+            if (input.x != 0)
+                transform.localScale = new Vector3(input.x > 0 ? 1 : -1,transform.localScale.y,transform.localScale.z);
+
+            // Fire events.
+            if (doJump)
+            {
+                OnJump.Invoke();
+            }
+            if (landed)
+            {
+                if (hardLand)
+                {
+                    OnHardLand.Invoke();
+                }
+                else
+                {
+                    OnLand.Invoke();
+                }
             }
         }
-        foreach (var pair in colliders)
+
+        void HandleStateChanged()
         {
-            if (pair.Value < smallestLength)
+            // When the state changes, notify the animation handle of the new state.
+            string stateName = null;
+            switch (currentState)
             {
-                smallestLength = pair.Value;
-                interactCollider = pair.Key;
+                case CharacterState.Idle:
+                    stateName = "idle";
+                    m_animator.SetBool("crouch", false);
+                    m_animator.SetBool("fall", false);
+                    break;
+                case CharacterState.Walk:
+                    stateName = "walk";
+                    m_animator.SetBool("crouch", false);
+                    m_animator.SetBool("fall", false);
+                    break;
+                case CharacterState.Run:
+                    stateName = "run";
+                    m_animator.SetBool("crouch", false);
+                    m_animator.SetBool("fall", false);
+                    break;
+                case CharacterState.Crouch:
+                    stateName = "crouch";
+                    m_animator.SetBool(stateName, true);
+                    break;
+                case CharacterState.Rise:
+                    stateName = "rise";
+                    m_animator.SetBool(stateName, true);
+                    m_animator.SetBool("fall", false);
+                    break;
+                case CharacterState.Fall:
+                    stateName = "fall";
+                    m_animator.SetBool(stateName, true);
+                    m_animator.SetBool("rise", false);
+                    break;
+                case CharacterState.Attack:
+                    stateName = "attack";
+                    m_animator.SetTrigger(stateName);
+                    break;
+                default:
+                    break;
             }
         }
 
-        if (interactCollider != null)
+        public void SetMoveEnable(bool isEnable)
         {
-
-        }
-        else
-        {
-
-        }
-
-        #endregion
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // 显示UI
+            m_isMove = isEnable;
         }
 
 
-    }
-
-
-    void FixedUpdate()
-    {
-        if (!m_isMove)// 不能进行移动
+        public void SetInteract()
         {
-            return;
-        }
-
-        #region Horizontal & Vertical Move
-        float horizontalAxis = Input.GetAxis("Horizontal");
-        float verticalAxis = Input.GetAxis("Vertical");
-        float horizontalStepLength = 0;
-        float verticalStepLength = 0;
-
-        if (horizontalAxis > 0.1f || horizontalAxis < -0.1f)
-        {
-            horizontalStepLength = horizontalAxis * m_moveSpeed;
-            transform.localPosition = new Vector3(
-                transform.localPosition.x + horizontalStepLength * Time.fixedDeltaTime,
-                transform.localPosition.y,
-                transform.localPosition.z);
-        }
-        if (verticalAxis > 0.1f || verticalAxis < -0.1f)
-        {
-            verticalStepLength = verticalAxis * m_moveSpeed;
-            transform.localPosition = new Vector3(
-                transform.localPosition.x,
-                transform.localPosition.y,
-                transform.localPosition.z + verticalStepLength * Time.fixedDeltaTime);
-        }
-        //m_animator.SetFloat("Speed", horizontalStepLength * horizontalStepLength + verticalStepLength * verticalStepLength);
-
-        #endregion
-
-
-        //Jump
-        if (Input.GetButtonDown("Jump"))
-        {
-            StartCoroutine("JumpRoutine");
-        }
-
-
-        //FlipX
-        if (horizontalAxis < -0.1f)
-        {
-            m_isFaceRight = false;
-        }
-        if (horizontalAxis > 0.1f)
-        {
-            m_isFaceRight = true;
-        }
-
-        if (m_isFaceRight != m_isInitFaceRight)
-        {
-            transform.localScale = new Vector3(m_isFaceRight ? 1 : -1, transform.localScale.y, transform.localScale.z);
-            m_isInitFaceRight = m_isFaceRight;
+            m_isInteractByUI = true;
         }
     }
-
-    IEnumerator JumpRoutine()
-    {
-        float half = m_jumpTime * 0.5f;
-        for (float t = 0; t < half; t += Time.deltaTime)
-        {
-            float d = m_jumpForce * (half - t);
-            transform.Translate((d * Time.deltaTime) * Vector3.up);
-            yield return null;
-        }
-        //for (float t = 0; t < half*0.8f; t += Time.deltaTime)
-        //{
-        //    float d = m_jumpForce * t;
-        //    transform.Translate((d * Time.deltaTime) * Vector3.down);
-        //    yield return null;
-        //}
-    }
-    public void SetMoveEnable(bool isEnable)
-    {
-        m_isMove = isEnable;
-    }
-
-    public void StopPlayerAnimation()
-    {
-        m_animator.SetFloat("Speed", 0.0f);
-    }
-
-    public void SetInteract()
-    {
-        m_isInteractByUI = true;
-    }
-}
+};

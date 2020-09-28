@@ -62,11 +62,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\GamePlay\CameraService\ConstrainedCamera.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\HandleEventWithAudio.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\PlayerEffectsHandler.cs" />
     <Compile Include="Assets\Scripts\GamePlay\CharacterController\PlayerMoveController.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\SkeletonAnimationHandle.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interactive object\InteractiveObject.cs" />
     <Compile Include="Assets\Scripts\GameRoot.cs" />
     <Compile Include="Assets\Scripts\Managers\PlayerManager.cs" />
-    <Compile Include="Assets\Scripts\MonoSingleton.cs" />
+    <Compile Include="Assets\Scripts\StarPlatinum\Base\MonoSingleton.cs" />
     <Compile Include="Assets\Scripts\UnityTool\ShowFPS.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/MG Project/Projects/MG_2D_Platform/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

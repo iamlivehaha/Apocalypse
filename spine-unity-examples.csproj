@@ -68,7 +68,6 @@
     <Compile Include="Assets\Plugins\Spine Examples\Scripts\DraggableTransform.cs" />
     <Compile Include="Assets\Plugins\Spine Examples\Scripts\FootSoldierExample.cs" />
     <Compile Include="Assets\Plugins\Spine Examples\Scripts\Getting Started Scripts\BasicPlatformerController.cs" />
-    <Compile Include="Assets\Plugins\Spine Examples\Scripts\Getting Started Scripts\ConstrainedCamera.cs" />
     <Compile Include="Assets\Plugins\Spine Examples\Scripts\Getting Started Scripts\Raptor.cs" />
     <Compile Include="Assets\Plugins\Spine Examples\Scripts\Getting Started Scripts\SpineBeginnerTwo.cs" />
     <Compile Include="Assets\Plugins\Spine Examples\Scripts\Getting Started Scripts\SpineBlinkPlayer.cs" />
