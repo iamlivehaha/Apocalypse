@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.GamePlay.CharacterController;
+using Assets.Scripts.GamePlay.CharacterController.Player;
 using StarPlatinum.Base;
 
 namespace Assets.Scripts.Managers
@@ -13,7 +14,7 @@ namespace Assets.Scripts.Managers
 
         }
 
-        public void SetMonoMoveController(PlayerMoveController moveController)
+        public void SetPlayerMoveController(PlayerMoveController moveController)
         {
             m_moveCtrl = moveController;
         }

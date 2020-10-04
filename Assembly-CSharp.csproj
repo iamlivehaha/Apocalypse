@@ -63,12 +63,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\GamePlay\CameraService\ConstrainedCamera.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\CharacterController\HandleEventWithAudio.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\CharacterController\PlayerEffectsHandler.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\CharacterController\PlayerMoveController.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\CharacterController\SkeletonAnimationHandle.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\Hunter.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\IEnemy.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\Pitman.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\Researcher.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\Weapon\Catch.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\Weapon\Crossbow.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\Weapon\IWeapon.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Enemy\Weapon\Pickaxe.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\ICharacter.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Player\HandleEventWithAudio.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Player\PlayerEffectsHandler.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Player\PlayerMoveController.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\CharacterController\Player\SkeletonAnimationHandle.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interactive object\InteractiveObject.cs" />
     <Compile Include="Assets\Scripts\GameRoot.cs" />
+    <Compile Include="Assets\Scripts\Managers\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Managers\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\StarPlatinum\Base\MonoSingleton.cs" />
     <Compile Include="Assets\Scripts\UnityTool\ShowFPS.cs" />

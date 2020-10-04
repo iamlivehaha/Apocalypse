@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.GamePlay.CharacterController.Player;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Assets.Scripts.GamePlay.CharacterController

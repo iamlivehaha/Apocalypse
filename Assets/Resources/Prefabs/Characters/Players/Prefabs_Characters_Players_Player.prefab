@@ -4886,7 +4886,7 @@ GameObject:
   - component: {fileID: 314096895751063247}
   - component: {fileID: 314096895751063246}
   m_Layer: 0
-  m_Name: Characters_Prefab_Player
+  m_Name: Prefabs_Characters_Players_Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5044,8 +5044,8 @@ MonoBehaviour:
   m_jumpInterruptFactor: 0.5
   m_forceCrouchVelocity: 25
   m_forceCrouchDuration: 0.5
-  m_airControl: 0.8
-  m_animator: {fileID: 0}
+  m_airControl: 0.6
+  m_crouchControl: 0.5
   m_showInteractiveUIRadius: 1
   m_interactableRadius: 0.5
   m_interactableRaycastAngle: 90
@@ -5053,6 +5053,10 @@ MonoBehaviour:
   m_interactableLayer:
     serializedVersion: 2
     m_Bits: 0
+  input: {x: 0, y: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  previousState: 0
+  currentState: 0
 --- !u!1 &314096895834566095
 GameObject:
   m_ObjectHideFlags: 0

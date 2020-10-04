@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Managers;
 using GamePlay;
 using UnityEngine;
 using UnityEngine.Events;
-using Spine.Unity;
 
-namespace Assets.Scripts.GamePlay.CharacterController
+namespace Assets.Scripts.GamePlay.CharacterController.Player
 {
-    [RequireComponent(typeof(UnityEngine.CharacterController))]
-    public class PlayerMoveController : MonoBehaviour
+    public class PlayerMoveController : ICharacter
     {
-        public enum CharacterState
+        public enum PlayerState
         {
             None,
             Idle,
@@ -23,9 +19,6 @@ namespace Assets.Scripts.GamePlay.CharacterController
             Fall,
             Attack
         }
-
-        [Header("Components")]
-        public UnityEngine.CharacterController m_controller;
 
         [Header("Public, Physics Property")]
         public float m_walkSpeed = 5f;
@@ -42,8 +35,6 @@ namespace Assets.Scripts.GamePlay.CharacterController
         public float m_airControl = 0.8f;
         public float m_crouchControl = 0.5f;
 
-        [Header("Animation")]
-        public Animator m_animator;
 
         [Header("Public, Interactive Property")]
         public float m_showInteractiveUIRadius = 1.0f;
@@ -68,7 +59,7 @@ namespace Assets.Scripts.GamePlay.CharacterController
         //bool isGrounded = false;
         bool wasGrounded = false;
 
-        public CharacterState previousState, currentState;
+        public PlayerState previousState, currentState;
 
 
         //private collider detection
@@ -79,7 +70,7 @@ namespace Assets.Scripts.GamePlay.CharacterController
         Collider interactCollider = null;
         float smallestLength = 10000;
 
-        void Start()
+        public override void Init()
         {
             m_controller = GetComponent<UnityEngine.CharacterController>();
             m_animator = transform.Find("Visuals/Creature").GetComponent<Animator>();
@@ -228,19 +219,19 @@ namespace Assets.Scripts.GamePlay.CharacterController
             {
                 if (doCrouch)
                 {
-                    currentState = CharacterState.Crouch;
+                    currentState = PlayerState.Crouch;
                 }
                 else
                 {
                     if (input.x == 0)
-                        currentState = CharacterState.Idle;
+                        currentState = PlayerState.Idle;
                     else
-                        currentState = Mathf.Abs(input.x) > 0.6f ? CharacterState.Run : CharacterState.Walk;
+                        currentState = Mathf.Abs(input.x) > 0.6f ? PlayerState.Run : PlayerState.Walk;
                 }
             }
             else
             {
-                currentState = velocity.y > 0 ? CharacterState.Rise : CharacterState.Fall;
+                currentState = velocity.y > 0 ? PlayerState.Rise : PlayerState.Fall;
             }
 
             bool stateChanged = previousState != currentState;//semaphore
@@ -290,36 +281,36 @@ namespace Assets.Scripts.GamePlay.CharacterController
             string stateName = null;
             switch (currentState)
             {
-                case CharacterState.Idle:
+                case PlayerState.Idle:
                     stateName = "idle";
                     m_animator.SetBool("crouch", false);
                     m_animator.SetBool("fall", false);
                     break;
-                case CharacterState.Walk:
+                case PlayerState.Walk:
                     stateName = "walk";
                     m_animator.SetBool("crouch", false);
                     m_animator.SetBool("fall", false);
                     break;
-                case CharacterState.Run:
+                case PlayerState.Run:
                     stateName = "run";
                     m_animator.SetBool("crouch", false);
                     m_animator.SetBool("fall", false);
                     break;
-                case CharacterState.Crouch:
+                case PlayerState.Crouch:
                     stateName = "crouch";
                     m_animator.SetBool(stateName, true);
                     break;
-                case CharacterState.Rise:
+                case PlayerState.Rise:
                     stateName = "rise";
                     m_animator.SetBool(stateName, true);
                     m_animator.SetBool("fall", false);
                     break;
-                case CharacterState.Fall:
+                case PlayerState.Fall:
                     stateName = "fall";
                     m_animator.SetBool(stateName, true);
                     m_animator.SetBool("rise", false);
                     break;
-                case CharacterState.Attack:
+                case PlayerState.Attack:
                     stateName = "attack";
                     m_animator.SetTrigger(stateName);
                     break;
