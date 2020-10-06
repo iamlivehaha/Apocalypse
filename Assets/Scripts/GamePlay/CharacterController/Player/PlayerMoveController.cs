@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Player
 {
+    [RequireComponent(typeof(UnityEngine.CharacterController))]
     public class PlayerMoveController : ICharacter
     {
         public enum PlayerState
@@ -19,6 +20,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             Fall,
             Attack
         }
+        [Header("Components")]
+        public UnityEngine.CharacterController m_controller;
 
         [Header("Public, Physics Property")]
         public float m_walkSpeed = 5f;
@@ -273,6 +276,19 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     OnLand.Invoke();
                 }
             }
+        }
+        void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            Rigidbody body = hit.collider.attachedRigidbody;
+            if (body == null || body.isKinematic)
+                return;
+
+            if (hit.moveDirection.y < -0.3F)
+                return;
+
+            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            body.velocity = pushDir * 2f;//dir * pushpower
+            Debug.Log("controller collider happen");
         }
 
         void HandleStateChanged()

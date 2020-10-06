@@ -8,8 +8,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public override void Init()
         {
             base.Init();
-            m_controller = GetComponent<UnityEngine.CharacterController>();
             m_animator = transform.Find("Visuals/Researcher").GetComponent<Animator>();
+            m_boxCollider = GetComponent<BoxCollider>();
+            m_rigidbody = GetComponent<Rigidbody>();
         }
 
         // Update is called once per frame
@@ -20,12 +21,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         public override void Attack(GameObject o)
         {
-            throw new System.NotImplementedException();
+            m_animator.SetTrigger("attack");
         }
 
         public override void UnderAttack(GameObject o)
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

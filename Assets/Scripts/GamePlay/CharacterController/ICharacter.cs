@@ -3,11 +3,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.GamePlay.CharacterController
 {
-    [RequireComponent(typeof(UnityEngine.CharacterController))]
+
     public abstract class ICharacter : MonoBehaviour
     {
-        [Header("Components")]
-        public UnityEngine.CharacterController m_controller;
 
         protected string m_name = "";
         protected GameObject m_gameObejct;

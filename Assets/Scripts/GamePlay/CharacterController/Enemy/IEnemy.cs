@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon;
+using Spine;
+using Spine.Unity;
 using UnityEngine;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Enemy
@@ -12,25 +14,28 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             None,
             Idle,
             Patrol,
-            Crouch,
             Chasing,
             Confusing,
             Rise,
             Fall,
             Attack
         }
-        [Header("Components")]
         public IWeapon m_weapon = null;
+        [Header("Components")]
+        public BoxCollider m_boxCollider;
+        public Rigidbody m_rigidbody;
 
         [Header("Patrol Line")]
         public bool bPatrol = false;
         public List<Transform> m_patrolLine;
         public Transform m_currentDestination = null;
         public Transform m_nextDestination = null;
-        public Vector2 m_patrolDirection = new Vector2(1, 0);
+        public Vector3 m_patrolDirection = new Vector3(1, 0, 0);
 
 
         [Header("Behavior Property")]
+        public float m_patrolSpeed = 1.0f;
+        public float m_chasingSpeed = 2.0f;
         public float m_confusingTime = 1.5f;
         public float m_attackInterval = 1.0f;
         public float m_viewDistance = 5.0f;
@@ -40,9 +45,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         [SerializeField]
         public EnemyState previousState, currentState;
         private float m_gravityScale = 9.8f;
+        private GameObject m_visuals = null;
 
-        private bool bTargetInView = false;
-        private bool bTargetInAttackRange = false;
+        public bool bTargetInView = false;
+        public bool bTargetInAttackRange = false;
+        private bool bGrounded = true;
+        private float moveSpeed = 1.0f;
 
         protected IEnemy() { }
 
@@ -76,7 +84,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (bPatrol && m_patrolLine.Count == 0)
             {
                 bPatrol = false;
-                Debug.LogError("The Patrol Line of "+gameObject+" hasn't been set!");
+                Debug.LogError("The Patrol Line of " + gameObject + " hasn't been set!");
             }
             if (bPatrol && m_patrolLine.Count >= 2)
             {
@@ -84,6 +92,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 m_nextDestination = m_patrolLine[1];
             }
 
+            m_visuals = transform.Find("Visuals").gameObject;
         }
 
         private void FixedUpdate()
@@ -100,7 +109,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                         m_currentDestination = transform1;
                     }
                 }
-                m_patrolDirection = new Vector2(m_currentDestination.position.x - transform.position.x, 0);
             }
             //Determine next destination in normal line
             if (bPatrol && bTargetInView == false)
@@ -110,33 +118,36 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     m_currentDestination = m_nextDestination;
                     for (int i = 0; i < m_patrolLine.Count; i++)
                     {
-                        if (m_patrolLine[i]==m_currentDestination&&i!= m_patrolLine.Count-1)
+                        if (m_patrolLine[i] == m_currentDestination)
                         {
-                            m_nextDestination = m_patrolLine[i + 1];
-                        }
-                        else
-                        {
-                            m_nextDestination = m_patrolLine[0];
+                            m_nextDestination = i != m_patrolLine.Count - 1 ? m_patrolLine[i + 1] : m_patrolLine[0];
                         }
                     }
                 }
+                m_patrolDirection = new Vector3(m_currentDestination.position.x - transform.position.x, 0, 0);
             }
             //check target is in view
             if (true)
             {
-                Vector3 fwd = transform.TransformDirection(m_patrolDirection);
-                Ray ray = new Ray(transform.position + transform.forward, transform.forward);
-                Debug.DrawLine(transform.position,transform.position+fwd*m_viewDistance,Color.red);
+                Vector3 fwd = m_patrolDirection.normalized;
+                Vector3 offset = new Vector3(0, 2, 0);
+                Ray ray = new Ray(transform.position + offset, fwd);
+                Debug.DrawLine(transform.position + offset, transform.position + offset + fwd * m_viewDistance, Color.red);
                 bool bHit = Physics.Raycast(ray, out var hit, m_viewDistance);
-                if (bHit&&hit.transform.tag=="Player")
-                 {
-                     m_target = hit.transform;
-                     bTargetInView = true;
-                 }
-                 else
-                 {
-                     bTargetInView = false;
-                 }
+                //if (bHit)
+                //{
+                //    Debug.Log(hit.collider.name);
+                //}
+                if (bHit && hit.collider.tag == "Player")
+                {
+                    m_target = hit.transform;
+                    bTargetInView = true;
+                }
+                else
+                {
+                    bTargetInView = false;
+                }
+                m_animator.SetBool("targetinview", bTargetInView);
             }
             //check target is in attack range
             if (bTargetInView)
@@ -147,59 +158,77 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
             //Movement
             //patrol routine or move to target
-            if (bPatrol)
+            if (bPatrol && bTargetInView == false)
             {
                 Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
-                Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * Time.fixedDeltaTime;
-                if (!m_controller.isGrounded)
-                {
-                    diretion += gravityDeltaVelocity;
-                }
-                else
-                {
-                    diretion.y = 0;
-                }
-                m_controller.Move(diretion * Time.fixedDeltaTime);
+                m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
+                diretion += Gravity();
+                transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
             }
             else if (bTargetInView)
             {
-                //Vector3 diretion = new Vector3(m_target.position.x - transform.position.x,0,0).normalized;
-                //transform.Translate(diretion * Time.fixedDeltaTime, Space.World);
+                Vector3 diretion = new Vector3(m_target.position.x - transform.position.x, 0, 0).normalized;
+                m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
+                transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime, Space.World);
             }
 
 
+            //determine next state
 
-            if (previousState == EnemyState.Chasing)
+            if (bTargetInView)
             {
-                currentState = bTargetInView ? EnemyState.Chasing : EnemyState.Confusing;
+                currentState = bTargetInAttackRange ? EnemyState.Attack : EnemyState.Chasing;
             }
-            else if (bPatrol)
+            else if (bPatrol && bTargetInView == false)
             {
-                currentState = EnemyState.Patrol;
+                currentState = previousState == EnemyState.Chasing ? EnemyState.Confusing : EnemyState.Patrol;
             }
-            else
+            else if (bPatrol == false)
             {
                 currentState = EnemyState.Idle;
             }
 
 
             bool stateChanged = previousState != currentState;//semaphore
-
+            if (stateChanged)
+                Debug.Log(previousState + " change to " + currentState);
             previousState = currentState;
             if (stateChanged)
             {
                 HandleStateChanged();
             }
         }
+
+        private Vector3 Gravity()
+        {
+            Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * Time.fixedDeltaTime;
+            if (GroundCheck())
+            {
+                return gravityDeltaVelocity;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+        private bool GroundCheck()
+        {
+            //Physics.Raycast(射线发出位置，射线方向，射线长度，射线碰撞检测Layer）
+            bGrounded = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), 2.50f);
+
+            return bGrounded;
+        }
+
         // Determine and store character state
         public void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.transform.tag == "Player" && collision.transform.position.y > transform.position.y)
             {
-                if (currentState==EnemyState.Patrol||currentState==EnemyState.Idle)
+                if (currentState == EnemyState.Patrol || currentState == EnemyState.Idle)
                 {
                     currentState = EnemyState.Confusing;
-                }else if (currentState==EnemyState.Confusing)
+                }
+                else if (currentState == EnemyState.Confusing)
                 {
                     currentState = EnemyState.Chasing;
                 }
@@ -218,18 +247,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     break;
                 case EnemyState.Patrol:
                     stateName = "patrol";
+                    moveSpeed = m_patrolSpeed;
                     m_animator.SetTrigger(stateName);
                     break;
                 case EnemyState.Chasing:
                     stateName = "chasing";
+                    moveSpeed = m_chasingSpeed;
                     m_animator.SetTrigger("angry");
-                    if (bTargetInView)
-                    {
-                        m_animator.SetBool("run",true);
-                    }
                     break;
                 case EnemyState.Confusing:
-                    stateName = "Confusing";
+                    stateName = "confusing";
                     m_animator.SetTrigger(stateName);
                     break;
                 case EnemyState.Attack:
@@ -260,9 +287,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         {
             while (true)
             {
-                if (bTargetInView==false)
+                if (bTargetInView == false)
                 {
-                    yield break;;
+                    yield break; ;
                 }
 
                 if (bTargetInAttackRange)//attack and rest for a interval
