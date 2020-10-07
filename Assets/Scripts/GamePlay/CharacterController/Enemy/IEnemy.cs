@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 {
+    [RequireComponent(typeof(ISkeletonAnimation))]
     public abstract class IEnemy : ICharacter
     {
         public enum EnemyState
@@ -24,6 +25,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         [Header("Components")]
         public BoxCollider m_boxCollider;
         public Rigidbody m_rigidbody;
+        public ISkeletonComponent m_skeletonComponent;
 
         [Header("Patrol Line")]
         public bool bPatrol = false;
@@ -161,14 +163,24 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (bPatrol && bTargetInView == false)
             {
                 Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
-                m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
+                var skeleton = m_skeletonComponent.Skeleton;
+                if (skeleton != null)
+                {
+                    skeleton.ScaleX = diretion.x > 0 ? 1 : -1;
+                }
+                //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
                 diretion += Gravity();
                 transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
             }
             else if (bTargetInView)
             {
                 Vector3 diretion = new Vector3(m_target.position.x - transform.position.x, 0, 0).normalized;
-                m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
+                var skeleton = m_skeletonComponent.Skeleton;
+                if (skeleton!=null)
+                {
+                    skeleton.ScaleX = diretion.x > 0 ? 1 : -1;
+                }
+                //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
                 transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime, Space.World);
             }
 

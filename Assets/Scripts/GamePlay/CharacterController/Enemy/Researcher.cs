@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Spine.Unity;
+using UnityEngine;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 {
@@ -11,6 +12,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_animator = transform.Find("Visuals/Researcher").GetComponent<Animator>();
             m_boxCollider = GetComponent<BoxCollider>();
             m_rigidbody = GetComponent<Rigidbody>();
+            m_skeletonComponent = transform.Find("Visuals/Researcher").GetComponent<ISkeletonComponent>();
         }
 
         // Update is called once per frame

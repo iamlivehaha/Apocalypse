@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GamePlay;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,6 +23,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         }
         [Header("Components")]
         public UnityEngine.CharacterController m_controller;
+        public ISkeletonComponent m_skeletonComponent;
 
         [Header("Public, Physics Property")]
         public float m_walkSpeed = 5f;
@@ -73,10 +75,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         Collider interactCollider = null;
         float smallestLength = 10000;
 
+
         public override void Init()
         {
             m_controller = GetComponent<UnityEngine.CharacterController>();
             m_animator = transform.Find("Visuals/Creature").GetComponent<Animator>();
+            m_skeletonComponent = transform.Find("Visuals/Creature").GetComponent<ISkeletonComponent>();
         }
         // Update is called once per frame
         void Update()
@@ -257,8 +261,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
 
 
             //Filp X 
-            if (input.x != 0)
-                transform.localScale = new Vector3(input.x > 0 ? 1 : -1,transform.localScale.y,transform.localScale.z);
+            if (Math.Abs(input.x) > 0.02f)
+            {
+                var skeleton = m_skeletonComponent.Skeleton;
+                if (skeleton != null)
+                {
+                    skeleton.ScaleX = input.x > 0 ? 1 : -1;
+                }
+            }
 
             // Fire events.
             if (doJump)
