@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\Managers\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\StarPlatinum\Base\MonoSingleton.cs" />
     <Compile Include="Assets\Scripts\UnityTool\ShowFPS.cs" />
+    <None Include="Assets\Resources\Modles\Player\zj.atlas.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/MG Project/Projects/MG_2D_Platform/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
