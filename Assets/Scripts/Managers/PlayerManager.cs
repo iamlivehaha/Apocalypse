@@ -1,6 +1,8 @@
-﻿using Assets.Scripts.GamePlay.CharacterController;
+﻿using System.Collections.Generic;
+using Assets.Scripts.GamePlay.CharacterController;
 using Assets.Scripts.GamePlay.CharacterController.Player;
 using StarPlatinum.Base;
+using UnityEngine;
 
 namespace Assets.Scripts.Managers
 {
@@ -8,8 +10,18 @@ namespace Assets.Scripts.Managers
     {
         /// <summary>移动控制</summary>
         private PlayerMoveController m_moveCtrl = null;
+        List<GameObject> spawnpoints = new List<GameObject>();
 
         public override void SingletonInit()
+        {
+            foreach (var o in GameObject.FindGameObjectsWithTag("SpawnPoint"))
+            {
+                spawnpoints.Add(o);
+            }
+            
+        }
+
+        public void SpawnPlayer(Transform spawnpoint)
         {
 
         }

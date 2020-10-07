@@ -1,50 +1,44 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using StarPlatinum.Base;
 
-public class GameRoot : MonoBehaviour
+namespace Assets.Scripts
 {
-    private static GameRoot _instance; //唯一单例
-
-    public static GameRoot instance
+    public class GameRoot : MonoSingleton<GameRoot>
     {
-        get
+        public override void SingletonInit()
         {
-            if (_instance == null)
-            {
-                _instance = GameObject.Find("GameRoot").GetComponent<GameRoot>();
-            }
-            return _instance;
+            throw new System.NotImplementedException();
         }
-    }
 
-    //private AudioSys audioSys;
-    //private CameraSys cameraSys;
-    //private AISys aiSys;
-    //private FurnitureSys furnitureSys;
-    //private PcSys pcSys;
-    //private TimeSys timeSys;
-    //private UISys uiSys;
+        //private AudioSys audioSys;
+        //private CameraSys cameraSys;
+        //private AISys aiSys;
+        //private FurnitureSys furnitureSys;
+        //private PcSys pcSys;
+        //private TimeSys timeSys;
+        //private UISys uiSys;
 
-    void Start()
-    {
-        //InitManager();
+        void Start()
+        {
+            //InitManager();
 
-    }
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //UpdataManager();
-        //if (isEnterPlaying)
-        //{
-        //    //EnterPlaying();开始游戏
-        //    isEnterPlaying = false;
-        //}
-    }
+        // Update is called once per frame
+        void Update()
+        {
+            //UpdataManager();
+            //if (isEnterPlaying)
+            //{
+            //    //EnterPlaying();开始游戏
+            //    isEnterPlaying = false;
+            //}
+        }
 
-    private void OnDestroy()
-    {
-        //DestroyManager();
+        private void OnDestroy()
+        {
+            //DestroyManager();
+        }
+
+
     }
 }

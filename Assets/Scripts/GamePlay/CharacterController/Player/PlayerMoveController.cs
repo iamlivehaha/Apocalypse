@@ -260,13 +260,13 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
 
 
-            //Filp X 
+            //Filp X by rotation
             if (Math.Abs(input.x) > 0.02f)
             {
                 var skeleton = m_skeletonComponent.Skeleton;
                 if (skeleton != null)
                 {
-                    skeleton.ScaleX = input.x > 0 ? 1 : -1;
+                    skeleton.ScaleX = input.x > 0 ? -1 : 1;
                 }
             }
 

@@ -1,0 +1,76 @@
+
+zj.png
+size: 416,1028
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+her
+  rotate: false
+  xy: 303, 830
+  size: 84, 196
+  orig: 98, 196
+  offset: 14, 0
+  index: -1
+houshou
+  rotate: false
+  xy: 254, 471
+  size: 156, 205
+  orig: 156, 205
+  offset: 0, 0
+  index: -1
+htui
+  rotate: true
+  xy: 2, 862
+  size: 164, 299
+  orig: 249, 330
+  offset: 0, 31
+  index: -1
+qer
+  rotate: false
+  xy: 234, 10
+  size: 177, 195
+  orig: 177, 195
+  offset: 0, 0
+  index: -1
+qshou
+  rotate: false
+  xy: 234, 207
+  size: 177, 220
+  orig: 177, 220
+  offset: 0, 0
+  index: -1
+qtui
+  rotate: true
+  xy: 2, 678
+  size: 182, 296
+  orig: 182, 349
+  offset: 0, 53
+  index: -1
+shen
+  rotate: false
+  xy: 2, 2
+  size: 230, 425
+  orig: 230, 425
+  offset: 0, 0
+  index: -1
+tou
+  rotate: true
+  xy: 2, 429
+  size: 247, 250
+  orig: 247, 250
+  offset: 0, 0
+  index: -1
+wei
+  rotate: true
+  xy: 300, 702
+  size: 126, 58
+  orig: 126, 58
+  offset: 0, 0
+  index: -1
+yj
+  rotate: false
+  xy: 389, 977
+  size: 25, 49
+  orig: 25, 49
+  offset: 0, 0
+  index: -1

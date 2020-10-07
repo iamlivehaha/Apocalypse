@@ -24,6 +24,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public override void Attack(GameObject o)
         {
             m_animator.SetTrigger("attack");
+
+            //var bone = m_skeletonComponent.Skeleton.FindBone("bone01");
+
         }
 
         public override void UnderAttack(GameObject o)
