@@ -27,7 +27,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public Rigidbody m_rigidbody;
         public ISkeletonComponent m_skeletonComponent;
 
-        [Header("Patrol Line")]
+        [Header("Patrol Line Setting")]
         public bool bPatrol = false;
         public List<Transform> m_patrolLine;
         public Transform m_currentDestination = null;
@@ -133,17 +133,25 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 Vector3 fwd = m_patrolDirection.normalized;
                 Vector3 offset = new Vector3(0, 2, 0);
+                Vector3 offset_up = new Vector3(0, 6, 0);
+                Vector3 offset_down = new Vector3(0, 1, 0);
                 Ray ray = new Ray(transform.position + offset, fwd);
+                Ray ray_up = new Ray(transform.position + offset_up, fwd);
+                Ray ray_down = new Ray(transform.position + offset_down, fwd);
                 Debug.DrawLine(transform.position + offset, transform.position + offset + fwd * m_viewDistance, Color.red);
+                Debug.DrawLine(transform.position + offset, transform.position + offset_up + fwd * m_viewDistance, Color.red);
+                Debug.DrawLine(transform.position + offset, transform.position + offset_down + fwd * m_viewDistance, Color.red);
                 bool bHit = Physics.Raycast(ray, out var hit, m_viewDistance);
+                bool bHit_up = Physics.Raycast(ray_up, out var hit_up, m_viewDistance);
+                bool bHit_down = Physics.Raycast(ray_down, out var hit_down, m_viewDistance);
                 //if (bHit)
                 //{
                 //    Debug.Log(hit.collider.name);
                 //}
-                if (bHit && hit.collider.tag == "Player")
+                if (bHit|| bHit_up|| bHit_down)
                 {
-                    m_target = hit.transform;
-                    bTargetInView = true;
+                    m_target = bHit ? hit.transform:(bHit_up ? hit_up.transform : hit_down.transform);
+                    bTargetInView = m_target.tag == "Player";
                 }
                 else
                 {
@@ -163,23 +171,23 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (bPatrol && bTargetInView == false)
             {
                 Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
-                var skeleton = m_skeletonComponent.Skeleton;
-                if (skeleton != null)
-                {
-                    skeleton.ScaleX = diretion.x > 0 ? 1 : -1;
-                }
+                FlipXCharacter(diretion.x);
                 //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
                 diretion += Gravity();
                 transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
             }
             else if (bTargetInView)
             {
-                Vector3 diretion = new Vector3(m_target.position.x - transform.position.x, 0, 0).normalized;
-                var skeleton = m_skeletonComponent.Skeleton;
-                if (skeleton!=null)
+                Vector3 diretion;
+                if (Mathf.Abs(m_target.position.x - transform.position.x)>m_weapon.m_range)
                 {
-                    skeleton.ScaleX = diretion.x > 0 ? 1 : -1;
+                    diretion = new Vector3(m_target.position.x - transform.position.x, 0, 0).normalized;
                 }
+                else
+                {
+                    diretion = Vector3.zero;
+                }
+                FlipXCharacter(m_target.position.x - transform.position.x);
                 //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
                 transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime, Space.World);
             }
@@ -193,7 +201,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
             else if (bPatrol && bTargetInView == false)
             {
-                currentState = previousState == EnemyState.Chasing ? EnemyState.Confusing : EnemyState.Patrol;
+                currentState = (previousState == EnemyState.Chasing|| previousState == EnemyState.Attack)
+                    ? EnemyState.Confusing : EnemyState.Patrol;
             }
             else if (bPatrol == false)
             {
@@ -211,6 +220,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
         }
 
+        private void FlipXCharacter(float x_value)
+        {
+            var skeleton = m_skeletonComponent.Skeleton;
+            if (skeleton != null)
+            {
+                skeleton.ScaleX = x_value > 0 ? 1 : -1;
+            }
+        }
         private Vector3 Gravity()
         {
             Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * Time.fixedDeltaTime;
@@ -232,23 +249,26 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
 
         // Determine and store character state
-        public void OnCollisionEnter2D(Collision2D collision)
+        public void OnTriggerEnter(Collider collider)
         {
-            if (collision.transform.tag == "Player" && collision.transform.position.y > transform.position.y)
+            Debug.Log("hurt!");
+            if (collider.gameObject.tag == "Player" && collider.transform.position.y > transform.position.y)
             {
                 if (currentState == EnemyState.Patrol || currentState == EnemyState.Idle)
                 {
+                    previousState = currentState;
                     currentState = EnemyState.Confusing;
                 }
                 else if (currentState == EnemyState.Confusing)
                 {
+                    previousState = currentState;
                     currentState = EnemyState.Chasing;
                 }
             }
             HandleStateChanged();
         }
 
-        void HandleStateChanged()
+        private void HandleStateChanged()
         {
             // When the state changes, notify the animation handle of the new state.
             string stateName = null;

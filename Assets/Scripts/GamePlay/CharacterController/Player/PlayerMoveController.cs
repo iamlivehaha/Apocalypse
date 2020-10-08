@@ -35,7 +35,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         public float m_jumpSpeed = 25;
         public float m_minimumJumpDuration = 0.5f;
         public float m_jumpInterruptFactor = 0.5f;
-        public float m_forceCrouchVelocity = 25;
+        public float m_forceCrouchVelocity = 40;
         public float m_forceCrouchDuration = 0.5f;
         public float m_airControl = 0.8f;
         public float m_crouchControl = 0.5f;
@@ -286,19 +286,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     OnLand.Invoke();
                 }
             }
-        }
-        void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            Rigidbody body = hit.collider.attachedRigidbody;
-            if (body == null || body.isKinematic)
-                return;
-
-            if (hit.moveDirection.y < -0.3F)
-                return;
-
-            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            body.velocity = pushDir * 2f;//dir * pushpower
-            Debug.Log("controller collider happen");
         }
 
         void HandleStateChanged()

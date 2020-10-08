@@ -608,6 +608,25 @@ Transform:
   m_Father: {fileID: 2058138755}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1074017550 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 314096895751063240, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
+    type: 3}
+  m_PrefabInstance: {fileID: 314096895174529730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1074017555
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074017550}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1465812, y: 0.5048253, z: 1}
+  m_Center: {x: 0.029316187, y: 0.14498147, z: 0}
 --- !u!1 &1144669109
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,6 +818,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
+        type: 3}
+      propertyPath: m_forceCrouchVelocity
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 314096895834566099, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_Mesh
@@ -828,6 +852,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 56308592, guid: 262d075e49b6b2d45b2c78bfc61da72c, type: 3}
+      propertyPath: m_range
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 591509886, guid: 262d075e49b6b2d45b2c78bfc61da72c, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.91969997
@@ -871,6 +899,10 @@ PrefabInstance:
     - target: {fileID: 1294660357, guid: 262d075e49b6b2d45b2c78bfc61da72c, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.97486126
+      objectReference: {fileID: 0}
+    - target: {fileID: 1474983556, guid: 262d075e49b6b2d45b2c78bfc61da72c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1474983557, guid: 262d075e49b6b2d45b2c78bfc61da72c, type: 3}
       propertyPath: m_Constraints
