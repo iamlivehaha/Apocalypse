@@ -276,17 +276,12 @@ PrefabInstance:
     - target: {fileID: 50453606200212318, guid: 1267340a9190fde4e83677183cfb2d96,
         type: 3}
       propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 2169252078267484182, guid: 1267340a9190fde4e83677183cfb2d96,
+        type: 3}
+      propertyPath: m_TagString
       value: Wall
-      objectReference: {fileID: 0}
-    - target: {fileID: 50453607779247100, guid: 1267340a9190fde4e83677183cfb2d96,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 50453607830099153, guid: 1267340a9190fde4e83677183cfb2d96,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1267340a9190fde4e83677183cfb2d96, type: 3}
@@ -803,16 +798,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
-        type: 3}
-      propertyPath: m_forceCrouchVelocity
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 314096895834566099, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2742640888572462533, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}

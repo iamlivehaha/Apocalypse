@@ -5043,11 +5043,15 @@ MonoBehaviour:
   m_jumpSpeed: 25
   m_minimumJumpDuration: 0.5
   m_jumpInterruptFactor: 0.5
-  m_forceWallJumpVelocity: 0.5
-  m_forceCrouchVelocity: 40
+  m_forceCrouchVelocity: 50
   m_forceCrouchDuration: 0.5
-  m_airControl: 0.6
+  m_airControl: 0.8
   m_crouchControl: 0.5
+  m_istouchingFront: 0
+  m_iswallSliding: 1
+  m_wallSlidingSpeed: 15
+  m_wallJumpSpeed: 25
+  m_forceWallJumpVelocity: 0.5
   m_showInteractiveUIRadius: 1
   m_interactableRadius: 0.5
   m_interactableRaycastAngle: 90

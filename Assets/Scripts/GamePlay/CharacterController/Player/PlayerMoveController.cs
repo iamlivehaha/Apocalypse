@@ -35,12 +35,17 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         public float m_jumpSpeed = 25;
         public float m_minimumJumpDuration = 0.5f;
         public float m_jumpInterruptFactor = 0.5f;
-        public float m_forceWallJumpVelocity = 0.5f;
         public float m_forceCrouchVelocity = 40;
         public float m_forceCrouchDuration = 0.5f;
         public float m_airControl = 0.8f;
         public float m_crouchControl = 0.5f;
 
+        [Header("Wall Slide and Jump")]
+        public bool m_istouchingFront = false;
+        public bool m_iswallSliding = true;
+        public float m_wallSlidingSpeed = 15;
+        public float m_wallJumpSpeed = 30;
+        public float m_forceWallJumpVelocity = 6f;
 
         [Header("Public, Interactive Property")]
         public float m_showInteractiveUIRadius = 1.0f;
@@ -80,6 +85,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         float smallestLength = 10000;
 
 
+
         public override void Init()
         {
             m_controller = GetComponent<UnityEngine.CharacterController>();
@@ -116,6 +122,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             {
 
             }
+
+            #endregion
+
+            #region wall slide and jump
+            //m_istouchingFront = Physics.OverlapSphere(,);
+
 
             #endregion
             //jump check
@@ -171,14 +183,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                         doJump = true;
                     }
                 }
-                else if (isWallJump)
-                {
-                    if (inputJumpStart)
-                    {
-                        doJump = true;
-                        isWallJump = false;
-                    }
-                }
                 else//stop jump in the air
                 {
                     doJumpInterrupt = inputJumpStop && Time.time < minimumJumpEndTime;
@@ -199,6 +203,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 if (velocity.y > 0)
                     velocity.y *= m_jumpInterruptFactor;
             }
+
             //Move Horizontal and set the air control 
             velocity.x = 0;
             if (!doCrouch)
@@ -233,6 +238,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
             m_animator.SetFloat("input.x", Math.Abs(input.x));
             m_animator.SetFloat("velocity_y", Math.Abs(velocity.y));
+            velocity.z = 0;
             m_controller.Move(velocity * dt);
             wasGrounded = isGrounded;
 
@@ -245,7 +251,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 }
                 else
                 {
-                    if (input.x == 0)
+                    if (Math.Abs(input.x) < 0.02f)
                         currentState = PlayerState.Idle;
                     else
                         currentState = Mathf.Abs(input.x) > 0.6f ? PlayerState.Run : PlayerState.Walk;
@@ -346,23 +352,21 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     break;
             }
         }
-
+        //wall jump
         public void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (hit.transform.tag == "wall")
+            if (hit.collider.tag == "Wall")
             {
-                isWallJump = velocity.x > m_forceWallJumpVelocity;
+                Debug.Log("wall jump");
+                if (inputJumpStart && Mathf.Abs(velocity.x) > m_forceWallJumpVelocity && !m_controller.isGrounded)
+                {
+                    velocity.y = 0;
+                    velocity.y =Mathf.Clamp(velocity.y + m_wallJumpSpeed, velocity.y, m_wallJumpSpeed);
+                }
+
             }
-            Rigidbody body = hit.collider.attachedRigidbody;
-            if (body == null || body.isKinematic)
-                return;
-
-            if (hit.moveDirection.y < -0.3F)
-                return;
-
-            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            body.velocity = pushDir * 10;
         }
+
         public void SetMoveEnable(bool isEnable)
         {
             m_isMove = isEnable;
