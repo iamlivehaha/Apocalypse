@@ -273,6 +273,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Environment
       objectReference: {fileID: 0}
+    - target: {fileID: 50453606200212318, guid: 1267340a9190fde4e83677183cfb2d96,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 50453607779247100, guid: 1267340a9190fde4e83677183cfb2d96,
         type: 3}
       propertyPath: m_IsActive
@@ -608,25 +613,6 @@ Transform:
   m_Father: {fileID: 2058138755}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1074017550 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 314096895751063240, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
-    type: 3}
-  m_PrefabInstance: {fileID: 314096895174529730}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1074017555
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1074017550}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.1465812, y: 0.5048253, z: 1}
-  m_Center: {x: 0.029316187, y: 0.14498147, z: 0}
 --- !u!1 &1144669109
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,27 +807,17 @@ PrefabInstance:
     - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_forceCrouchVelocity
-      value: 40
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 314096895834566099, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 497678416174688020, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
+    - target: {fileID: 2742640888572462533, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3655319361092666802, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
-        type: 3}
-      propertyPath: initialFlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3803324775858508394, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
-        type: 3}
-      propertyPath: m_Name
-      value: Creature
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3, type: 3}

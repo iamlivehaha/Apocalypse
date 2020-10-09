@@ -35,6 +35,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         public float m_jumpSpeed = 25;
         public float m_minimumJumpDuration = 0.5f;
         public float m_jumpInterruptFactor = 0.5f;
+        public float m_forceWallJumpVelocity = 0.5f;
         public float m_forceCrouchVelocity = 40;
         public float m_forceCrouchDuration = 0.5f;
         public float m_airControl = 0.8f;
@@ -55,7 +56,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         private bool m_isMove = true;
         private bool m_isInteractByUI = false;
 
-        public Vector2 input = default(Vector2);
+        private Vector2 input = default(Vector2);
         public Vector3 velocity = default(Vector3);
         float minimumJumpEndTime = 0;
         float forceCrouchEndTime;
@@ -63,6 +64,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         //Mutex control
         //bool isGrounded = false;
         bool wasGrounded = false;
+        public bool isWallJump = false;
+        private bool inputJumpStop;
+        private bool inputJumpStart;
 
         public PlayerState previousState, currentState;
 
@@ -114,6 +118,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
 
             #endregion
+            //jump check
+            inputJumpStop = Input.GetButtonUp("Jump");
+            inputJumpStart = Input.GetButtonDown("Jump");
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -132,14 +139,13 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
 
             float dt = Time.fixedDeltaTime;
+
             bool isGrounded = m_controller.isGrounded;
             bool landed = !wasGrounded && isGrounded;//Mutex control
 
             // Dummy input.
             input.x = Input.GetAxis("Horizontal");
             input.y = Input.GetAxis("Vertical");
-            bool inputJumpStop = Input.GetButtonUp("Jump");
-            bool inputJumpStart = Input.GetButtonDown("Jump");
             bool doCrouch = (isGrounded && input.y < -0.5f) || (forceCrouchEndTime > Time.time);
             bool doJumpInterrupt = false;
             bool doJump = false;
@@ -165,10 +171,19 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                         doJump = true;
                     }
                 }
+                else if (isWallJump)
+                {
+                    if (inputJumpStart)
+                    {
+                        doJump = true;
+                        isWallJump = false;
+                    }
+                }
                 else//stop jump in the air
                 {
                     doJumpInterrupt = inputJumpStop && Time.time < minimumJumpEndTime;
                 }
+
             }
             // Dummy physics and controller using UnityEngine.CharacterController.
             //gravity ~ -9.8N/kg => gravity velocity ~ -9.8m/s
@@ -217,7 +232,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 }
             }
             m_animator.SetFloat("input.x", Math.Abs(input.x));
-            //m_animator.SetBool("dojumpInterupt",doJumpInterrupt);
+            m_animator.SetFloat("velocity_y", Math.Abs(velocity.y));
             m_controller.Move(velocity * dt);
             wasGrounded = isGrounded;
 
@@ -332,6 +347,22 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
         }
 
+        public void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (hit.transform.tag == "wall")
+            {
+                isWallJump = velocity.x > m_forceWallJumpVelocity;
+            }
+            Rigidbody body = hit.collider.attachedRigidbody;
+            if (body == null || body.isKinematic)
+                return;
+
+            if (hit.moveDirection.y < -0.3F)
+                return;
+
+            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            body.velocity = pushDir * 10;
+        }
         public void SetMoveEnable(bool isEnable)
         {
             m_isMove = isEnable;
