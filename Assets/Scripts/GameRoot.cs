@@ -1,4 +1,7 @@
-﻿using StarPlatinum.Base;
+﻿using Assets.Scripts.Managers;
+using StarPlatinum.Base;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts
 {
@@ -9,7 +12,8 @@ namespace Assets.Scripts
             throw new System.NotImplementedException();
         }
 
-        //private AudioSys audioSys;
+        private AudioManager m_audioManager;
+        private PlayerManager m_playerManager;
         //private CameraSys cameraSys;
         //private AISys aiSys;
         //private FurnitureSys furnitureSys;
@@ -19,6 +23,8 @@ namespace Assets.Scripts
 
         void Start()
         {
+            m_audioManager = AudioManager.Instance();
+            m_playerManager = PlayerManager.Instance();
             //InitManager();
 
         }
@@ -34,11 +40,20 @@ namespace Assets.Scripts
             //}
         }
 
+        public void UpdateSpawnPoint(Transform pos)
+        {
+            m_playerManager.m_currentSP = pos;
+        }
         private void OnDestroy()
         {
-            //DestroyManager();
+            DestroyManager();
         }
 
+        private void DestroyManager()
+        {
+            m_audioManager.OnDestroy();
+            m_playerManager.OnDestroy();
 
+        }
     }
 }

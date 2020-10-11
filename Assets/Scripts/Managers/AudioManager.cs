@@ -44,5 +44,11 @@ namespace Assets.Scripts.Managers
         {
             return Resources.Load<AudioClip>(SoundPrefix + soundsName);
         }
+
+        public void OnDestroy()
+        {
+            
+        }
+
     }
 }
