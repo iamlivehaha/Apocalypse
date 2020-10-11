@@ -51,8 +51,8 @@ namespace Assets.Scripts
 
         private void DestroyManager()
         {
-            m_audioManager.OnDestroy();
-            m_playerManager.OnDestroy();
+            //m_audioManager.OnDestroy();
+            //m_playerManager.OnDestroy();
 
         }
     }

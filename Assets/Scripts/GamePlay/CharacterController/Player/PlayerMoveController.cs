@@ -139,18 +139,15 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 // 显示UI
             }
 
+            #region Move MoveLogic to update func
 
-        }
-
-
-        void FixedUpdate()
-        {
             if (!m_isMove)// 不能进行移动
             {
                 return;
             }
 
-            float dt = Time.fixedDeltaTime;
+            //float dt = Time.fixedDeltaTime;
+            float dt = Time.deltaTime;
 
             bool isGrounded = m_controller.isGrounded;
             bool landed = !wasGrounded && isGrounded;//Mutex control
@@ -307,6 +304,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     OnLand.Invoke();
                 }
             }
+
+            #endregion
+        }
+
+
+        void FixedUpdate()
+        {
+
         }
 
         void HandleStateChanged()
