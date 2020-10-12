@@ -9,7 +9,7 @@ namespace Assets.Scripts
     {
         public override void SingletonInit()
         {
-            throw new System.NotImplementedException();
+
         }
 
         private AudioManager m_audioManager;

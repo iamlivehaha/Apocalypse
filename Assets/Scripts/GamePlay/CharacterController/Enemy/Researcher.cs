@@ -13,6 +13,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_boxCollider = GetComponent<BoxCollider>();
             m_rigidbody = GetComponent<Rigidbody>();
             m_skeletonComponent = transform.Find("Visuals/Researcher").GetComponent<ISkeletonComponent>();
+
+            // property setting
+            m_viewDistance = 8.0f;
         }
 
         // Update is called once per frame

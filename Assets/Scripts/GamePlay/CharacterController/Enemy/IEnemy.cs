@@ -148,9 +148,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 //{
                 //    Debug.Log(hit.collider.name);
                 //}
-                if (bHit|| bHit_up|| bHit_down)
+                if (bHit || bHit_up || bHit_down)
                 {
-                    m_target = bHit ? hit.transform:(bHit_up ? hit_up.transform : hit_down.transform);
+                    m_target = bHit ? hit.transform : (bHit_up ? hit_up.transform : hit_down.transform);
                     bTargetInView = m_target.tag == "Player";
                 }
                 else
@@ -167,7 +167,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
 
             //Movement
-            //patrol routine or move to target
+
+            #region patrol routine or move to target
             if (bPatrol && bTargetInView == false)
             {
                 Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
@@ -179,7 +180,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             else if (bTargetInView)
             {
                 Vector3 diretion;
-                if (Mathf.Abs(m_target.position.x - transform.position.x)>m_weapon.m_range)
+                if (Mathf.Abs(m_target.position.x - transform.position.x) > m_weapon.m_range)
                 {
                     diretion = new Vector3(m_target.position.x - transform.position.x, 0, 0).normalized;
                 }
@@ -191,6 +192,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
                 transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime, Space.World);
             }
+            #endregion
+
 
 
             //determine next state
@@ -201,7 +204,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
             else if (bPatrol && bTargetInView == false)
             {
-                currentState = (previousState == EnemyState.Chasing|| previousState == EnemyState.Attack)
+                currentState = (previousState == EnemyState.Chasing || previousState == EnemyState.Attack)
                     ? EnemyState.Confusing : EnemyState.Patrol;
             }
             else if (bPatrol == false)
