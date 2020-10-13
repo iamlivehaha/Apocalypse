@@ -38,7 +38,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         [Header("Behavior Property")]
         public float m_patrolSpeed = 1.0f;
         public float m_chasingSpeed = 2.0f;
-        public float m_confusingTime = 1.5f;
+        public float m_confusingTime = 2;
+        public float m_tempConfusingTime = 2;
+        public bool m_isConfusing = false;
         public float m_attackInterval = 1.0f;
         public float m_viewDistance = 5.0f;
         public float[] m_viewAngle = new float[2] { 30, 160 };
@@ -167,32 +169,45 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
 
             //Movement
+            if (m_isConfusing)
+            {
+                if (Mathf.Abs(m_tempConfusingTime) <= 0.1f)
+                {
+                    m_isConfusing = false;
+                    m_tempConfusingTime = m_confusingTime;
+                }
+                m_tempConfusingTime -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                #region patrol routine or move to target
+                if (bPatrol && bTargetInView == false)
+                {
+                    Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
+                    FlipXCharacter(diretion.x);
+                    diretion += Gravity();
+                    transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
+                }
+                else if (bTargetInView)
+                {
+                    Vector3 diretion;
+                    if (Mathf.Abs(m_target.position.x - transform.position.x) > m_weapon.m_range)
+                    {
+                        diretion = new Vector3(m_target.position.x - transform.position.x, 0, 0).normalized;
+                    }
+                    else
+                    {
+                        diretion = Vector3.zero;
+                    }
+                    FlipXCharacter(m_target.position.x - transform.position.x);
+                    //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
+                    transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime, Space.World);
+                }
+                #endregion
+            }
 
-            #region patrol routine or move to target
-            if (bPatrol && bTargetInView == false)
-            {
-                Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
-                FlipXCharacter(diretion.x);
-                //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
-                diretion += Gravity();
-                transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
-            }
-            else if (bTargetInView)
-            {
-                Vector3 diretion;
-                if (Mathf.Abs(m_target.position.x - transform.position.x) > m_weapon.m_range)
-                {
-                    diretion = new Vector3(m_target.position.x - transform.position.x, 0, 0).normalized;
-                }
-                else
-                {
-                    diretion = Vector3.zero;
-                }
-                FlipXCharacter(m_target.position.x - transform.position.x);
-                //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
-                transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime, Space.World);
-            }
-            #endregion
+
+
 
 
 
@@ -292,6 +307,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     break;
                 case EnemyState.Confusing:
                     stateName = "confusing";
+                    m_isConfusing = true;
                     m_animator.SetTrigger(stateName);
                     break;
                 case EnemyState.Attack:

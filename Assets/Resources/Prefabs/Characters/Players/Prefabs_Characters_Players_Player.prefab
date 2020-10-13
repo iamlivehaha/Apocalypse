@@ -4920,13 +4920,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 3
+  m_Height: 2.25
   m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.4
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 1.5, z: 0}
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!114 &314096895751063244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5037,9 +5037,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_controller: {fileID: 0}
   m_walkSpeed: 5
-  m_runSpeed: 7
+  m_runSpeed: 10
   m_gravityScale: 6.6
-  m_rayDistance: 2
   m_jumpSpeed: 25
   m_minimumJumpDuration: 0.5
   m_jumpInterruptFactor: 0.5
@@ -5047,10 +5046,8 @@ MonoBehaviour:
   m_forceCrouchDuration: 0.5
   m_airControl: 0.8
   m_crouchControl: 0.5
-  m_istouchingFront: 0
-  m_iswallSliding: 1
-  m_wallSlidingSpeed: 15
-  m_wallJumpSpeed: 25
+  m_wallJumpUpSpeed: 30
+  m_wallJumpBounceForce: 10
   m_forceWallJumpVelocity: 0.5
   m_showInteractiveUIRadius: 1
   m_interactableRadius: 0.5

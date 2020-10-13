@@ -27,9 +27,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
 
         [Header("Public, Physics Property")]
         public float m_walkSpeed = 5f;
-        public float m_runSpeed = 7f;
+        public float m_runSpeed = 10f;
         public float m_gravityScale = 6.6f;
-        public float m_rayDistance = 2f;
 
         [Header("Jumping")]
         public float m_jumpSpeed = 25;
@@ -41,10 +40,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         public float m_crouchControl = 0.5f;
 
         [Header("Wall Slide and Jump")]
-        public bool m_istouchingFront = false;
-        public bool m_iswallSliding = true;
-        public float m_wallSlidingSpeed = 15;
-        public float m_wallJumpSpeed = 30;
+        //public bool m_istouchingFront = false;
+        //private bool m_iswallSliding = true;
+        //private float m_wallSlidingSpeed = 15;
+        public float m_wallJumpUpSpeed = 30;
+        public float m_wallJumpBounceVelocity = 10;
+        public float m_wallJumpMaskInputXTime = 1.3f;
         public float m_forceWallJumpVelocity = 6f;
 
         [Header("Public, Interactive Property")]
@@ -362,11 +363,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         {
             if (hit.collider.tag == "Wall")
             {
-                Debug.Log("wall jump");
                 if (inputJumpStart && Mathf.Abs(velocity.x) > m_forceWallJumpVelocity && !m_controller.isGrounded)
                 {
+                    //vertical jump
                     velocity.y = 0;
-                    velocity.y =Mathf.Clamp(velocity.y + m_wallJumpSpeed, velocity.y, m_wallJumpSpeed);
+                    velocity.y = Mathf.Clamp(velocity.y + m_wallJumpUpSpeed, velocity.y, m_wallJumpUpSpeed);
+                    //horizontal bounce
+                    velocity.x = 0;
+                    float wallJumpVelocity = -hit.moveDirection.normalized.x * m_wallJumpBounceVelocity;
+                    velocity.x = Mathf.Clamp(velocity.x + wallJumpVelocity, velocity.x, wallJumpVelocity);
+
                 }
 
             }

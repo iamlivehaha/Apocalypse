@@ -2515,15 +2515,21 @@ MonoBehaviour:
   m_currentDestination: {fileID: 0}
   m_nextDestination: {fileID: 0}
   m_patrolDirection: {x: 1, y: 0, z: 0}
-  m_confusingTime: 1.5
+  m_patrolSpeed: 1
+  m_chasingSpeed: 2
+  m_confusingTime: 2
+  m_tempConfusingTime: 2
+  m_isConfusing: 0
   m_attackInterval: 1
-  m_viewDistance: 5
+  m_viewDistance: 8
   m_viewAngle:
   - 30
   - 160
   m_target: {fileID: 0}
   previousState: 0
   currentState: 0
+  bTargetInView: 0
+  bTargetInAttackRange: 0
 --- !u!54 &1474983557
 Rigidbody:
   m_ObjectHideFlags: 0
