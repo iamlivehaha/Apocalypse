@@ -5047,7 +5047,8 @@ MonoBehaviour:
   m_airControl: 0.8
   m_crouchControl: 0.5
   m_wallJumpUpSpeed: 30
-  m_wallJumpBounceForce: 10
+  m_wallJumpBounceVelocity: 7
+  m_wallJumpMaskInputXTime: 1.3
   m_forceWallJumpVelocity: 0.5
   m_showInteractiveUIRadius: 1
   m_interactableRadius: 0.5

@@ -47,6 +47,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         public float m_wallJumpBounceVelocity = 10;
         public float m_wallJumpMaskInputXTime = 1.3f;
         public float m_forceWallJumpVelocity = 6f;
+        private float m_wallJumpMaskInputXTempTime = 1.3f;
+        private bool m_isWallJump = false;
 
         [Header("Public, Interactive Property")]
         public float m_showInteractiveUIRadius = 1.0f;
@@ -203,23 +205,38 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
 
             //Move Horizontal and set the air control 
-            velocity.x = 0;
-            if (!doCrouch)
+
+            if (m_isWallJump)//mask the input X
             {
-                if (Math.Abs(input.x) > 0.01f)
+                if (Mathf.Abs(m_wallJumpMaskInputXTempTime)<=0.1f)
                 {
-                    velocity.x = (isGrounded ? 1 : m_airControl) * Mathf.Abs(input.x) > 0.6f ? m_runSpeed : m_walkSpeed;
-                    velocity.x *= Mathf.Sign(input.x);//return the +- symbol
+                    m_isWallJump = false;
+                    m_wallJumpMaskInputXTempTime = m_wallJumpMaskInputXTime;
+                }
+
+                m_wallJumpMaskInputXTempTime -= dt;
+            }
+            else
+            {
+                velocity.x = 0;
+                if (!doCrouch)
+                {
+                    if (Math.Abs(input.x) > 0.01f)
+                    {
+                        velocity.x = (isGrounded ? 1 : m_airControl) * Mathf.Abs(input.x) > 0.6f ? m_runSpeed : m_walkSpeed;
+                        velocity.x *= Mathf.Sign(input.x);//return the +- symbol
+                    }
+                }
+                else if (doCrouch)
+                {
+                    if (Math.Abs(input.x) > 0.01f)
+                    {
+                        velocity.x = m_crouchControl * m_walkSpeed;
+                        velocity.x *= Mathf.Sign(input.x);//return the +- symbol
+                    }
                 }
             }
-            else if (doCrouch)
-            {
-                if (Math.Abs(input.x) > 0.01f)
-                {
-                    velocity.x = m_crouchControl * m_walkSpeed;
-                    velocity.x *= Mathf.Sign(input.x);//return the +- symbol
-                }
-            }
+
 
             //Update the Velocity.Y and move
             if (!isGrounded)
@@ -279,13 +296,13 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
 
 
-            //Filp X by rotation
-            if (Math.Abs(input.x) > 0.02f)
+            //Filp X by velocity
+            if (Math.Abs(velocity.x) > 0.02f)
             {
                 var skeleton = m_skeletonComponent.Skeleton;
                 if (skeleton != null)
                 {
-                    skeleton.ScaleX = input.x > 0 ? -1 : 1;
+                    skeleton.ScaleX = velocity.x > 0 ? -1 : 1;
                 }
             }
 
@@ -361,7 +378,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         //wall jump
         public void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (hit.collider.tag == "Wall")
+            if (hit.collider.tag == "Wall"|| hit.collider.tag == "Enemy")
             {
                 if (inputJumpStart && Mathf.Abs(velocity.x) > m_forceWallJumpVelocity && !m_controller.isGrounded)
                 {
@@ -371,8 +388,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     //horizontal bounce
                     velocity.x = 0;
                     float wallJumpVelocity = -hit.moveDirection.normalized.x * m_wallJumpBounceVelocity;
-                    velocity.x = Mathf.Clamp(velocity.x + wallJumpVelocity, velocity.x, wallJumpVelocity);
-
+                    if (wallJumpVelocity>0)
+                    {
+                        velocity.x = Mathf.Clamp(velocity.x + wallJumpVelocity, velocity.x, wallJumpVelocity);
+                    }
+                    else
+                    {
+                        velocity.x = Mathf.Clamp(velocity.x + wallJumpVelocity, wallJumpVelocity,velocity.x);
+                    }
+                    
+                    m_isWallJump = true;
                 }
 
             }
