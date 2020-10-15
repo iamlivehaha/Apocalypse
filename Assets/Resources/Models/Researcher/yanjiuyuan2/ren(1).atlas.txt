@@ -1,0 +1,97 @@
+
+ren(1).png
+size: 1725,373
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: true
+  xy: 739, 147
+  size: 224, 461
+  orig: 227, 464
+  offset: 0, 2
+  index: -1
+coat2
+  rotate: true
+  xy: 1547, 148
+  size: 223, 91
+  orig: 224, 93
+  offset: 1, 0
+  index: -1
+eyes
+  rotate: true
+  xy: 1518, 154
+  size: 100, 18
+  orig: 100, 18
+  offset: 0, 0
+  index: -1
+glass
+  rotate: false
+  xy: 1407, 57
+  size: 66, 58
+  orig: 68, 60
+  offset: 1, 1
+  index: -1
+head
+  rotate: false
+  xy: 739, 8
+  size: 377, 137
+  orig: 377, 140
+  offset: 0, 0
+  index: -1
+jingtanhao
+  rotate: true
+  xy: 1118, 121
+  size: 24, 63
+  orig: 24, 63
+  offset: 0, 0
+  index: -1
+larm2
+  rotate: true
+  xy: 1202, 117
+  size: 137, 314
+  orig: 137, 333
+  offset: 0, 0
+  index: -1
+lleg2
+  rotate: true
+  xy: 1118, 18
+  size: 97, 287
+  orig: 98, 289
+  offset: 0, 1
+  index: -1
+rarm1
+  rotate: true
+  xy: 1202, 256
+  size: 115, 343
+  orig: 116, 344
+  offset: 0, 1
+  index: -1
+rleg1
+  rotate: false
+  xy: 1640, 84
+  size: 83, 287
+  orig: 86, 289
+  offset: 1, 1
+  index: -1
+tube2
+  rotate: false
+  xy: 377, 7
+  size: 360, 364
+  orig: 362, 366
+  offset: 1, 1
+  index: -1
+undertube1
+  rotate: false
+  xy: 2, 2
+  size: 373, 369
+  orig: 375, 371
+  offset: 1, 1
+  index: -1
+wenhao
+  rotate: false
+  xy: 1475, 54
+  size: 41, 61
+  orig: 42, 61
+  offset: 0, 0
+  index: -1

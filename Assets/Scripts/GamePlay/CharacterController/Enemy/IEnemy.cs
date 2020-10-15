@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon;
 using Spine;
 using Spine.Unity;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Enemy
@@ -28,7 +29,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public ISkeletonComponent m_skeletonComponent;
 
         [Header("Patrol Line Setting")]
-        public bool bPatrol = false;
+        public bool bPatrol = true;
         public List<Transform> m_patrolLine;
         public Transform m_currentDestination = null;
         public Transform m_nextDestination = null;
@@ -134,26 +135,47 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (true)
             {
                 Vector3 fwd = m_patrolDirection.normalized;
-                Vector3 offset = new Vector3(0, 2, 0);
-                Vector3 offset_up = new Vector3(0, 6, 0);
-                Vector3 offset_down = new Vector3(0, 1, 0);
-                Ray ray = new Ray(transform.position + offset, fwd);
-                Ray ray_up = new Ray(transform.position + offset_up, fwd);
+                Vector3 offset = new Vector3(0, 3.5f, 0);
+                Vector3 offset_up = new Vector3(0, 5f, 0);
+                Vector3 offset_down = new Vector3(0, 2, 0);
+                Ray ray = new Ray(transform.position + offset, fwd );
+                Ray ray_up = new Ray(transform.position + offset_up, fwd );
                 Ray ray_down = new Ray(transform.position + offset_down, fwd);
-                Debug.DrawLine(transform.position + offset, transform.position + offset + fwd * m_viewDistance, Color.red);
-                Debug.DrawLine(transform.position + offset, transform.position + offset_up + fwd * m_viewDistance, Color.red);
-                Debug.DrawLine(transform.position + offset, transform.position + offset_down + fwd * m_viewDistance, Color.red);
+                Debug.DrawRay(transform.position + offset, fwd* m_viewDistance , Color.red);
+                Debug.DrawRay(transform.position + offset_up, fwd * m_viewDistance , Color.red);
+                Debug.DrawRay(transform.position + offset_down, fwd * m_viewDistance , Color.red);
                 bool bHit = Physics.Raycast(ray, out var hit, m_viewDistance);
                 bool bHit_up = Physics.Raycast(ray_up, out var hit_up, m_viewDistance);
                 bool bHit_down = Physics.Raycast(ray_down, out var hit_down, m_viewDistance);
+                //Physics.BoxCast(fwd * m_viewDistance * 0.5f,
+                //    new Vector3(m_viewDistance * 0.5f, m_viewDistance * 0.5f, m_viewDistance * 0.5f)
+                //    , fwd);
+                //DrawGizmo.GetCustomAttribute()
+
                 //if (bHit)
                 //{
                 //    Debug.Log(hit.collider.name);
                 //}
                 if (bHit || bHit_up || bHit_down)
                 {
-                    m_target = bHit ? hit.transform : (bHit_up ? hit_up.transform : hit_down.transform);
-                    bTargetInView = m_target.tag == "Player";
+                    if (bHit&& hit.transform.tag == "Player")
+                    {
+                        m_target = hit.transform;
+                        bTargetInView = true;
+                    }else if (bHit_down && hit_down.transform.tag == "Player")
+                    {
+                        m_target = hit_down.transform;
+                        bTargetInView = true;
+                    }else if (bHit_up&& hit_up.transform.tag == "Player")
+                    {
+                        m_target = hit_up.transform;
+                        bTargetInView = true;
+                    }
+                    else
+                    {
+                        Debug.Log("nothing");
+                        bTargetInView = false;
+                    }
                 }
                 else
                 {
@@ -243,7 +265,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             var skeleton = m_skeletonComponent.Skeleton;
             if (skeleton != null)
             {
-                skeleton.ScaleX = x_value > 0 ? 1 : -1;
+                skeleton.ScaleX = x_value > 0 ? -1 : 1;
             }
         }
         private Vector3 Gravity()
@@ -312,7 +334,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     break;
                 case EnemyState.Attack:
                     stateName = "attack";
-                    StartCoroutine(StartAttack(m_target));
+                    Attack(m_target.gameObject);
                     break;
                 //case EnemyState.Crouch:
                 //    stateName = "crouch";
@@ -332,29 +354,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 default:
                     break;
             }
-        }
-
-        IEnumerator StartAttack(Transform mTarget)
-        {
-            while (true)
-            {
-                if (bTargetInView == false)
-                {
-                    yield break; ;
-                }
-
-                if (bTargetInAttackRange)//attack and rest for a interval
-                {
-                    Attack(mTarget.gameObject);
-                    yield return new WaitForSeconds(m_attackInterval);
-                }
-                else // no target so do nothing
-                {
-                    yield return null;
-                }
-
-            }
-
         }
     }
 }
