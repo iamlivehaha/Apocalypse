@@ -329,7 +329,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
 
         void FixedUpdate()
         {
-
+            LockZAxis();
         }
 
         void HandleStateChanged()
@@ -374,6 +374,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 default:
                     break;
             }
+        }
+        private void LockZAxis()
+        {
+            Vector3 currentPosition = transform.position;
+            currentPosition.z = 0;
+            transform.position = currentPosition;
         }
         //wall jump
         public void OnControllerColliderHit(ControllerColliderHit hit)
