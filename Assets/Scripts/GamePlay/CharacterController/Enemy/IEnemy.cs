@@ -43,8 +43,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public float m_tempConfusingTime = 2;
         public bool m_isConfusing = false;
         public float m_attackInterval = 1.0f;
-        public float m_viewDistance = 5.0f;
-        public float[] m_viewAngle = new float[2] { 30, 160 };
+        public float m_viewDistance = 20.0f;
+        public float m_viewAngle = 180;
+        public float m_heightoffset =3;
         public Transform m_target = null;
 
         [SerializeField]
@@ -56,6 +57,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public bool bTargetInAttackRange = false;
         private bool bGrounded = true;
         private float moveSpeed = 1.0f;
+
 
         protected IEnemy() { }
 
@@ -132,57 +134,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 m_patrolDirection = new Vector3(m_currentDestination.position.x - transform.position.x, 0, 0);
             }
             //check target is in view
-            if (true)
-            {
-                Vector3 fwd = m_patrolDirection.normalized;
-                Vector3 offset = new Vector3(0, 3.5f, 0);
-                Vector3 offset_up = new Vector3(0, 5f, 0);
-                Vector3 offset_down = new Vector3(0, 2, 0);
-                Ray ray = new Ray(transform.position + offset, fwd );
-                Ray ray_up = new Ray(transform.position + offset_up, fwd );
-                Ray ray_down = new Ray(transform.position + offset_down, fwd);
-                Debug.DrawRay(transform.position + offset, fwd* m_viewDistance , Color.red);
-                Debug.DrawRay(transform.position + offset_up, fwd * m_viewDistance , Color.red);
-                Debug.DrawRay(transform.position + offset_down, fwd * m_viewDistance , Color.red);
-                bool bHit = Physics.Raycast(ray, out var hit, m_viewDistance);
-                bool bHit_up = Physics.Raycast(ray_up, out var hit_up, m_viewDistance);
-                bool bHit_down = Physics.Raycast(ray_down, out var hit_down, m_viewDistance);
-                //Physics.BoxCast(fwd * m_viewDistance * 0.5f,
-                //    new Vector3(m_viewDistance * 0.5f, m_viewDistance * 0.5f, m_viewDistance * 0.5f)
-                //    , fwd);
-                //DrawGizmo.GetCustomAttribute()
-
-                //if (bHit)
-                //{
-                //    Debug.Log(hit.collider.name);
-                //}
-                if (bHit || bHit_up || bHit_down)
-                {
-                    if (bHit&& hit.transform.tag == "Player")
-                    {
-                        m_target = hit.transform;
-                        bTargetInView = true;
-                    }else if (bHit_down && hit_down.transform.tag == "Player")
-                    {
-                        m_target = hit_down.transform;
-                        bTargetInView = true;
-                    }else if (bHit_up&& hit_up.transform.tag == "Player")
-                    {
-                        m_target = hit_up.transform;
-                        bTargetInView = true;
-                    }
-                    else
-                    {
-                        Debug.Log("nothing");
-                        bTargetInView = false;
-                    }
-                }
-                else
-                {
-                    bTargetInView = false;
-                }
-                m_animator.SetBool("targetinview", bTargetInView);
-            }
+            bTargetInView = ViewCheck();
+            m_animator.SetBool("targetinview", bTargetInView);
             //check target is in attack range
             if (bTargetInView)
             {
@@ -229,10 +182,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
 
 
-
-
-
-
             //determine next state
 
             if (bTargetInView)
@@ -259,7 +208,30 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 HandleStateChanged();
             }
         }
-
+        private bool ViewCheck()
+        {
+            Vector3 forward = m_patrolDirection.normalized;//人物前方正方向
+            if (m_target==null)
+            {
+                m_target = GameObject.FindGameObjectWithTag("Player").transform;
+            }
+            Vector3 playerDir = m_target.transform.position - (transform.position + Vector3.up * m_heightoffset);//人物到被检测物体的方向
+            float tempangle = Vector3.Angle(forward, playerDir);//求出角度
+            RaycastHit hitInfo;
+            //向被检测物体发射射线，为了判断之间是否有障碍物遮挡
+            bool bhit = Physics.Raycast(transform.position + Vector3.up* m_heightoffset, playerDir, out hitInfo,m_viewDistance);
+            Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_viewDistance, Color.red);
+            Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_weapon.m_range,Color.yellow);
+            //Debug.Log("distance"+playerDir.magnitude+"tempangle "+tempangle+"bhit =="+bhit);
+            if (tempangle < 0.5f * m_viewAngle && (bhit == false || hitInfo.collider.tag != "Wall"))
+            {
+                if (playerDir.magnitude<=m_viewDistance)//player detected in view distance
+                {
+                    return true;
+                }
+            }
+            return false;//被检测物体不在视野中
+        }
         private void FlipXCharacter(float x_value)
         {
             var skeleton = m_skeletonComponent.Skeleton;
@@ -289,23 +261,52 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
 
         // Determine and store character state
+
         public void OnTriggerEnter(Collider collider)
         {
-            Debug.Log("hurt!");
-            if (collider.gameObject.tag == "Player" && collider.transform.position.y > transform.position.y)
+            if (collider.gameObject.tag == "Player" && collider.transform.position.y > transform.position.y + m_heightoffset)
             {
+                Debug.Log("hurt!");
                 if (currentState == EnemyState.Patrol || currentState == EnemyState.Idle)
                 {
                     previousState = currentState;
                     currentState = EnemyState.Confusing;
+                }
+                bool stateChanged = previousState != currentState;//semaphore
+                if (stateChanged)
+                    Debug.Log(previousState + " change to " + currentState);
+                if (stateChanged)
+                {
+                    HandleStateChanged();
+                }
+            }
+
+        }
+
+        public void OnTriggerStay(Collider collider)
+        {
+            if (collider.gameObject.tag == "Player" && collider.transform.position.y > transform.position.y+m_heightoffset)
+            {
+                Debug.Log("very hurt!");
+                if (currentState == EnemyState.Patrol || currentState == EnemyState.Idle)
+                {
+                    previousState = currentState;
+                    currentState = EnemyState.Chasing;
                 }
                 else if (currentState == EnemyState.Confusing)
                 {
                     previousState = currentState;
                     currentState = EnemyState.Chasing;
                 }
+                bool stateChanged = previousState != currentState;//semaphore
+                if (stateChanged)
+                    Debug.Log(previousState + " change to " + currentState);
+                if (stateChanged)
+                {
+                    HandleStateChanged();
+                }
             }
-            HandleStateChanged();
+
         }
 
         private void HandleStateChanged()

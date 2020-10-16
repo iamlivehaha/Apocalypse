@@ -4886,6 +4886,7 @@ GameObject:
   - component: {fileID: 314096895751063244}
   - component: {fileID: 314096895751063247}
   - component: {fileID: 314096895751063246}
+  - component: {fileID: 821858446}
   m_Layer: 0
   m_Name: Prefabs_Characters_Players_Player
   m_TagString: Player
@@ -5039,7 +5040,7 @@ MonoBehaviour:
   m_walkSpeed: 5
   m_runSpeed: 10
   m_gravityScale: 6.6
-  m_jumpSpeed: 25
+  m_jumpSpeed: 27
   m_minimumJumpDuration: 0.5
   m_jumpInterruptFactor: 0.5
   m_forceCrouchVelocity: 50
@@ -5048,7 +5049,7 @@ MonoBehaviour:
   m_crouchControl: 0.5
   m_wallJumpUpSpeed: 30
   m_wallJumpBounceVelocity: 7
-  m_wallJumpMaskInputXTime: 1.3
+  m_wallJumpMaskInputXTime: 0.6
   m_forceWallJumpVelocity: 0.5
   m_showInteractiveUIRadius: 1
   m_interactableRadius: 0.5
@@ -5061,6 +5062,19 @@ MonoBehaviour:
   isWallJump: 0
   previousState: 0
   currentState: 0
+--- !u!65 &821858446
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314096895751063240}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.63826174, z: 1}
+  m_Center: {x: 0, y: 0.10200927, z: 0}
 --- !u!1 &314096895834566095
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,8 +7,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 {
     public class Miner : IEnemy
     {
-        public float offset = 5;
+        public float Attackoffset = 5;
         public bool isBlock = false;
+
+        private Quaternion lookRot;
 
         // Start is called before the first frame update
         public override void Init()
@@ -18,18 +20,39 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_boxCollider = GetComponent<BoxCollider>();
             m_rigidbody = GetComponent<Rigidbody>();
             m_skeletonComponent = transform.Find("Visuals/Miner").GetComponent<ISkeletonComponent>();
+            m_target = GameObject.FindGameObjectWithTag("Player").transform;
 
             // property setting
-            m_viewDistance = 8.0f;
             m_animator.SetBool("bpatrol", bPatrol);
         }
 
         // Update is called once per frame
         void Update()
         {
-        
+            //check attack angle
+            if (!isBlock)
+            {
+                LookTarget(m_target.transform);
+            }
         }
 
+        private void CheckAttackAngle()
+        {
+            if (bTargetInAttackRange && bTargetInView)
+            {
+                float rotz = m_weapon.transform.rotation.eulerAngles.z;
+                if (rotz > 40 && rotz < 180)
+                {
+                    isBlock = true;
+                }
+                else
+                {
+                    isBlock = false;
+                }
+                m_animator.SetBool("isblock", isBlock);
+
+            }
+        }
         public override void Attack(GameObject o)
         {
             StartCoroutine(StartAttack(o.transform));
@@ -51,12 +74,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 }
                 if (bTargetInAttackRange)//attack and rest for a interval
                 {
-                    if (!isBlock)
-                    {
-                        LookTarget(mTarget.transform);
-                    }
+                    CheckAttackAngle();
                     m_animator.SetTrigger("attack");
                     yield return new WaitForSeconds(m_attackInterval);
+                    isBlock = false;
+                    m_animator.SetBool("isblock", isBlock);
                 }
                 else // no target so do nothing
                 {
@@ -69,9 +91,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         {
             Vector3 attackDir = (mTarget.position - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
-            Debug.Log("ttk " + angle + "t " + Time.time);
-            Quaternion rot = Quaternion.AngleAxis(-angle + offset, Vector3.forward);
-            m_weapon.transform.rotation = rot;
+            lookRot = Quaternion.AngleAxis(-angle + Attackoffset, Vector3.forward);
+            m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
+            //m_weapon.transform.rotation = rot;
         }
     }
 }

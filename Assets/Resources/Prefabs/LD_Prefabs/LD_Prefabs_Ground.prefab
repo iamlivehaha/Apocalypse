@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 551609909656935980}
   m_Layer: 10
   m_Name: LD_Prefabs_Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
