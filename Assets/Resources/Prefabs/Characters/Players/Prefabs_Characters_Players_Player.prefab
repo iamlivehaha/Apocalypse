@@ -5051,17 +5051,18 @@ MonoBehaviour:
   m_wallJumpBounceVelocity: 7
   m_wallJumpMaskInputXTime: 0.6
   m_forceWallJumpVelocity: 0.5
-  m_showInteractiveUIRadius: 1
   m_interactableRadius: 0.5
-  m_interactableRaycastAngle: 90
-  m_interactableRaycastAngleInterval: 10
   m_interactableLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
+  m_deathTime: 3
+  m_currentSP: {fileID: 0}
+  m_collectBro: 
   velocity: {x: 0, y: 0, z: 0}
   isWallJump: 0
   previousState: 0
   currentState: 0
+  coliders: []
 --- !u!65 &821858446
 BoxCollider:
   m_ObjectHideFlags: 0

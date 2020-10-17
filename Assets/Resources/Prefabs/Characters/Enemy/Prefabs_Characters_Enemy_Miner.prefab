@@ -1144,7 +1144,7 @@ MonoBehaviour:
   currentState: 0
   bTargetInView: 0
   bTargetInAttackRange: 0
-  Attackoffset: 40
+  Attackoffset: 45
   isBlock: 0
 --- !u!65 &4246237420662811807
 BoxCollider:

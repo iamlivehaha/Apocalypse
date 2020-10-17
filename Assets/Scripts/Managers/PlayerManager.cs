@@ -15,7 +15,7 @@ namespace Assets.Scripts.Managers
         private PlayerMoveController m_moveCtrl = null;
         List<GameObject> spawnpoints = new List<GameObject>();
         [SerializeField]
-        public Transform m_currentSP;
+        public Transform m_defaultSP;
 
         public override void SingletonInit()
         {
@@ -25,21 +25,27 @@ namespace Assets.Scripts.Managers
                 spawnpoints.Add(o);
             }
 
-            m_currentSP = spawnpoints[0].transform;
+            m_defaultSP = spawnpoints[0].transform;
             m_moveCtrl = m_playerGO.GetComponent<PlayerMoveController>();
         }
 
         public void SpawnPlayer(Transform spawnpoint)
         {
+            if (spawnpoint==null)
+            {
+                spawnpoint = m_defaultSP;
+            }
             StartCoroutine(Spawn(spawnpoint));
         }
 
         IEnumerator Spawn(Transform spawnpoint)
         {
             SetMoveEnable(false);
-            yield return new WaitForSeconds(2.0f);//wait for death and spawn animation
-            m_playerGO.transform.position = m_currentSP.position;
+            m_playerGO.transform.position = spawnpoint.position+new Vector3(0,0.8f,0);
+            yield return new WaitForSeconds(0.8f);//wait for death and spawn animation
+            m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Idle);
             SetMoveEnable(true);
+            yield break;
         }
 
 

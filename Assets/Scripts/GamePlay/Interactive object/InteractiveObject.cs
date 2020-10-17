@@ -7,15 +7,22 @@ namespace GamePlay
 {
     public class InteractiveObject : MonoBehaviour
     {
-        public static readonly string INTERACTABLE_TAG = "Interactive";
+        [SerializeField]
+        private int INTERACTABLE_Layer;
 
+        public int m_objID = 1;
         public string m_objectName = "";
 
+        void Awake()
+        {
+            INTERACTABLE_Layer = LayerMask.GetMask("Interactable");
+        }
         public void Start()
         {
-            if (tag != INTERACTABLE_TAG)
+
+            if ( gameObject.layer!= INTERACTABLE_Layer)
             {
-                tag = INTERACTABLE_TAG;
+                gameObject.layer = INTERACTABLE_Layer;
             }
 
             if (m_objectName != null || m_objectName != "")
@@ -31,14 +38,5 @@ namespace GamePlay
             }
         }
 
-        public void Interact()
-        {
-            GameObject controller = GameObject.Find("ControllerManager");
-            if (controller == null)
-            {
-                return;
-            }
-
-        }
     }
 }

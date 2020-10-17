@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Managers;
 using GamePlay;
 using Spine.Unity;
 using UnityEngine;
@@ -19,7 +21,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             Crouch,
             Rise,
             Fall,
-            Attack
+            Death
         }
         [Header("Components")]
         public UnityEngine.CharacterController m_controller;
@@ -51,12 +53,17 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         private bool m_isWallJump = false;
 
         [Header("Public, Interactive Property")]
-        public float m_showInteractiveUIRadius = 1.0f;
+        //public float m_showInteractiveUIRadius = 1.0f;
         public float m_interactableRadius = 0.5f;
-        public float m_interactableRaycastAngle = 90;
-        public float m_interactableRaycastAngleInterval = 10;
+        //public float m_interactableRaycastAngle = 90;
+        //public float m_interactableRaycastAngleInterval = 10;
         public LayerMask m_interactableLayer;
 
+        [Header("Public, Re spawn Property")]
+        public float m_deathTime = 3;
+        public Transform m_currentSP;
+        public List<int> m_collectBro = new List<int>();
+        //public bool isdying = false;
         //Temp variate
         // Events
         public event UnityAction OnJump, OnLand, OnHardLand;
@@ -82,10 +89,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         //private collider detection
         static int maxColliders = 10;
         Collider[] hitColliders = new Collider[maxColliders];
-        Dictionary<Collider, float> colliders = new Dictionary<Collider, float>();
+        public List<Collider> coliders = new List<Collider>();
 
         Collider interactCollider = null;
-        float smallestLength = 10000;
 
 
 
@@ -98,33 +104,30 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         // Update is called once per frame
         void Update()
         {
-            #region Check Collision
+            #region Check Interactable Collision
             int numColliders = Physics.OverlapSphereNonAlloc(transform.position, m_interactableRadius, hitColliders, m_interactableLayer.value);
-            //Debug.Log ("Num of Collisions: " + numColliders);
+            //Debug.Log("Num of Collisions: " + numColliders);
+            //bro check
             for (int i = 0; i < numColliders; i++)
             {
-                if (hitColliders[i].CompareTag(InteractiveObject.INTERACTABLE_TAG))
+                if (hitColliders[i].CompareTag("Bro"))
                 {
-                    colliders.Add(hitColliders[i], Vector3.SqrMagnitude(hitColliders[i].transform.position - transform.position));
+                    if (coliders.Contains(hitColliders[i]))
+                    {
+                        continue;
+                    }
+                    InteractiveObject hitObj = hitColliders[i].gameObject.GetComponent<InteractiveObject>();
+                    if (hitObj.tag=="Bro")
+                    {
+                        Debug.Log("collect bro!" + hitObj.m_objID);
+                        m_collectBro.Add(hitObj.m_objID);
+                        hitObj.gameObject.SetActive(false);
+                    }
+                    coliders.Add(hitColliders[i]);
                 }
             }
-            foreach (var pair in colliders)
-            {
-                if (pair.Value < smallestLength)
-                {
-                    smallestLength = pair.Value;
-                    interactCollider = pair.Key;
-                }
-            }
 
-            if (interactCollider != null)
-            {
 
-            }
-            else
-            {
-
-            }
 
             #endregion
 
@@ -208,7 +211,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
 
             if (m_isWallJump)//mask the input X
             {
-                if (Mathf.Abs(m_wallJumpMaskInputXTempTime)<=0.1f)
+                if (Mathf.Abs(m_wallJumpMaskInputXTempTime) <= 0.1f)
                 {
                     m_isWallJump = false;
                     m_wallJumpMaskInputXTempTime = m_wallJumpMaskInputXTime;
@@ -258,24 +261,28 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             wasGrounded = isGrounded;
 
             // Determine and store character state
-            if (isGrounded)
+            if (currentState != PlayerState.Death)
             {
-                if (doCrouch)
+                if (isGrounded)
                 {
-                    currentState = PlayerState.Crouch;
+                    if (doCrouch)
+                    {
+                        currentState = PlayerState.Crouch;
+                    }
+                    else
+                    {
+                        if (Math.Abs(input.x) < 0.02f)
+                            currentState = PlayerState.Idle;
+                        else
+                            currentState = Mathf.Abs(input.x) > 0.6f ? PlayerState.Run : PlayerState.Walk;
+                    }
                 }
                 else
                 {
-                    if (Math.Abs(input.x) < 0.02f)
-                        currentState = PlayerState.Idle;
-                    else
-                        currentState = Mathf.Abs(input.x) > 0.6f ? PlayerState.Run : PlayerState.Walk;
+                    currentState = velocity.y > 0 ? PlayerState.Rise : PlayerState.Fall;
                 }
             }
-            else
-            {
-                currentState = velocity.y > 0 ? PlayerState.Rise : PlayerState.Fall;
-            }
+
 
             bool stateChanged = previousState != currentState;//semaphore
 
@@ -367,9 +374,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     m_animator.SetBool(stateName, true);
                     m_animator.SetBool("rise", false);
                     break;
-                case PlayerState.Attack:
-                    stateName = "attack";
+                case PlayerState.Death:
+                    stateName = "death";
                     m_animator.SetTrigger(stateName);
+                    StartCoroutine(StartDeath());
                     break;
                 default:
                     break;
@@ -384,7 +392,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         //wall jump
         public void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (hit.collider.tag == "Wall"|| hit.collider.tag == "Enemy")
+            //wall jump checks
+            if (hit.collider.tag == "Wall" || hit.collider.tag == "Enemy")
             {
                 if (inputJumpStart && Mathf.Abs(velocity.x) > m_forceWallJumpVelocity && !m_controller.isGrounded)
                 {
@@ -394,21 +403,57 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     //horizontal bounce
                     velocity.x = 0;
                     float wallJumpVelocity = -hit.moveDirection.normalized.x * m_wallJumpBounceVelocity;
-                    if (wallJumpVelocity>0)
+                    if (wallJumpVelocity > 0)
                     {
                         velocity.x = Mathf.Clamp(velocity.x + wallJumpVelocity, velocity.x, wallJumpVelocity);
                     }
                     else
                     {
-                        velocity.x = Mathf.Clamp(velocity.x + wallJumpVelocity, wallJumpVelocity,velocity.x);
+                        velocity.x = Mathf.Clamp(velocity.x + wallJumpVelocity, wallJumpVelocity, velocity.x);
                     }
-                    
+
                     m_isWallJump = true;
                 }
-
+            }
+            //trap check and underAttack check
+            if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
+            {
+                Debug.Log("you die!");
+                ChangeState(PlayerState.Death);
+            }
+            //spawn point check
+            if (hit.collider.tag == "SpawnPoint")
+            {
+                if (hit.transform != m_currentSP)
+                {
+                    Debug.Log("Update spawn point!");
+                    m_currentSP = hit.transform;
+                }
             }
         }
+        IEnumerator StartDeath()
+        {
+            SetMoveEnable(false);
+            Time.timeScale = 0.3f;
+            yield return new WaitForSeconds(m_deathTime * Time.timeScale);
+            PlayerManager playerManager = PlayerManager.Instance();
+            playerManager.SpawnPlayer(m_currentSP);
+            Time.timeScale = 1;
 
+        }
+
+        public void ChangeState(PlayerState state)
+        {
+            previousState = currentState;
+            currentState = state;
+            bool stateChanged = previousState != currentState;//semaphore
+            if (stateChanged)
+                Debug.Log("Player: " + previousState + " change to " + currentState);
+            if (stateChanged)
+            {
+                HandleStateChanged();
+            }
+        }
         public void SetMoveEnable(bool isEnable)
         {
             m_isMove = isEnable;

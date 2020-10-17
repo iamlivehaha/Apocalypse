@@ -42,7 +42,7 @@ namespace Assets.Scripts
 
         public void UpdateSpawnPoint(Transform pos)
         {
-            m_playerManager.m_currentSP = pos;
+            m_playerManager.m_defaultSP = pos;
         }
         private void OnDestroy()
         {

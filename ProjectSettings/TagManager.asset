@@ -11,6 +11,7 @@ TagManager:
   - Trap
   - Ground
   - Weapon
+  - Bro
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Interactable
   - 
   - 
   - 
