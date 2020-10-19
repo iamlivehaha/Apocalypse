@@ -7,7 +7,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon
         // Start is called before the first frame update
         void Start()
         {
-            m_range = 1.5f;
+
         }
 
         // Update is called once per frame

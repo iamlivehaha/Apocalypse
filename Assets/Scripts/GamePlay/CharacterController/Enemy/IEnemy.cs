@@ -93,6 +93,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 bPatrol = false;
                 Debug.LogError("The Patrol Line of " + gameObject + " hasn't been set!");
             }
+
+            if (bPatrol && m_patrolLine.Count == 1)
+            {
+                m_currentDestination = m_patrolLine[0];
+                m_nextDestination = m_patrolLine[0];
+            }
             if (bPatrol && m_patrolLine.Count >= 2)
             {
                 m_currentDestination = m_patrolLine[0];
@@ -317,6 +323,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 case EnemyState.Idle:
                     stateName = "idle";
+                    m_animator.SetTrigger(stateName);
                     break;
                 case EnemyState.Patrol:
                     stateName = "patrol";
