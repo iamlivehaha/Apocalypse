@@ -1125,12 +1125,12 @@ MonoBehaviour:
   m_boxCollider: {fileID: 0}
   m_rigidbody: {fileID: 0}
   bPatrol: 1
+  m_defaultDir: 1
   m_patrolLine:
   - {fileID: 0}
   - {fileID: 0}
   m_currentDestination: {fileID: 0}
   m_nextDestination: {fileID: 0}
-  m_patrolDirection: {x: 1, y: 0, z: 0}
   m_patrolSpeed: 1
   m_chasingSpeed: 2
   m_confusingTime: 2
@@ -1147,6 +1147,7 @@ MonoBehaviour:
   bTargetInAttackRange: 0
   Attackoffset: 45
   isBlock: 0
+  m_WeaponCollider: {fileID: 842533248795516047}
 --- !u!65 &4246237420662811807
 BoxCollider:
   m_ObjectHideFlags: 0

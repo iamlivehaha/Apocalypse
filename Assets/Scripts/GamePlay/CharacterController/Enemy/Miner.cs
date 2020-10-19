@@ -11,6 +11,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public bool isBlock = false;
 
         private Quaternion lookRot;
+        public BoxCollider m_WeaponCollider;
 
         // Start is called before the first frame update
         public override void Init()
@@ -21,6 +22,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_rigidbody = GetComponent<Rigidbody>();
             m_skeletonComponent = transform.Find("Visuals/Miner").GetComponent<ISkeletonComponent>();
             m_target = GameObject.FindGameObjectWithTag("Player").transform;
+            if (m_WeaponCollider==null)
+            {
+                Debug.LogError("m_WeaponCollider is not set correctly");
+            }
+            else
+            {
+                m_WeaponCollider.enabled = false;
+            }
 
             // property setting
             m_animator.SetBool("bpatrol", bPatrol);
@@ -41,7 +50,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (bTargetInAttackRange && bTargetInView)
             {
                 float rotz = m_weapon.transform.rotation.eulerAngles.z;
-                if (rotz > 40 && rotz < 180)
+                if (rotz > 40 && rotz < 180||rotz<=320&&rotz>=300)
                 {
                     isBlock = true;
                 }
@@ -49,6 +58,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 {
                     isBlock = false;
                 }
+                Debug.Log("Block angle = "+ rotz);
                 m_animator.SetBool("isblock", isBlock);
 
             }
@@ -74,9 +84,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 }
                 if (bTargetInAttackRange)//attack and rest for a interval
                 {
+                    m_WeaponCollider.enabled = true;
                     CheckAttackAngle();
                     m_animator.SetTrigger("attack");
                     yield return new WaitForSeconds(m_attackInterval);
+                    m_WeaponCollider.enabled = false;
                     isBlock = false;
                     m_animator.SetBool("isblock", isBlock);
                 }
@@ -91,7 +103,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         {
             Vector3 attackDir = (mTarget.position - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
-            lookRot = Quaternion.AngleAxis(-angle + Attackoffset, Vector3.forward);
+            float dir = (mTarget.position - transform.position).normalized.x;
+            lookRot = Quaternion.AngleAxis(dir >0?-angle-Attackoffset:-angle + Attackoffset, Vector3.forward);
             m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
             //m_weapon.transform.rotation = rot;
         }

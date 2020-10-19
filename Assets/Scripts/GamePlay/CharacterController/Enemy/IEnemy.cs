@@ -8,6 +8,13 @@ using UnityEngine;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 {
+    [System.Serializable]
+    public enum DefaultDirection
+    {
+        Left,
+        Right
+    }
+
     [RequireComponent(typeof(ISkeletonAnimation))]
     public abstract class IEnemy : ICharacter
     {
@@ -22,6 +29,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             Fall,
             Attack
         }
+
         public IWeapon m_weapon = null;
         [Header("Components")]
         public BoxCollider m_boxCollider;
@@ -30,10 +38,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         [Header("Patrol Line Setting")]
         public bool bPatrol = true;
+        public DefaultDirection m_defaultDir = DefaultDirection.Right;
         public List<Transform> m_patrolLine;
         public Transform m_currentDestination = null;
         public Transform m_nextDestination = null;
-        public Vector3 m_patrolDirection = new Vector3(1, 0, 0);
+
 
 
         [Header("Behavior Property")]
@@ -57,7 +66,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public bool bTargetInAttackRange = false;
         private bool bGrounded = true;
         private float moveSpeed = 1.0f;
-
+        private Vector3 mDefaultDirection;
 
         protected IEnemy() { }
 
@@ -88,6 +97,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         public override void Init()
         {
+            mDefaultDirection = m_defaultDir == DefaultDirection.Right ? Vector3.right : Vector3.left;
             if (bPatrol && m_patrolLine.Count == 0)
             {
                 bPatrol = false;
@@ -137,7 +147,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                         }
                     }
                 }
-                m_patrolDirection = new Vector3(m_currentDestination.position.x - transform.position.x, 0, 0);
+                mDefaultDirection = new Vector3(m_currentDestination.position.x - transform.position.x, 0, 0);
             }
             //check target is in view
             bTargetInView = ViewCheck();
@@ -216,7 +226,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
         private bool ViewCheck()
         {
-            Vector3 forward = m_patrolDirection.normalized;//人物前方正方向
+            Vector3 forward = mDefaultDirection.normalized;//人物前方正方向
             if (m_target==null)
             {
                 m_target = GameObject.FindGameObjectWithTag("Player").transform;

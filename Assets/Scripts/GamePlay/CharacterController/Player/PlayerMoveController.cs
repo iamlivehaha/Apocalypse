@@ -27,10 +27,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         public UnityEngine.CharacterController m_controller;
         public ISkeletonComponent m_skeletonComponent;
 
+        [Header("DebugTool;")]
+        public bool m_godenFinger = false;
+
         [Header("Public, Physics Property")]
         public float m_walkSpeed = 5f;
         public float m_runSpeed = 10f;
         public float m_gravityScale = 6.6f;
+
 
         [Header("Jumping")]
         public float m_jumpSpeed = 25;
@@ -418,8 +422,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             //trap check and underAttack check
             if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
             {
-                Debug.Log("you die!");
-                ChangeState(PlayerState.Death);
+                if (!m_godenFinger)
+                {
+                    Debug.Log("you die!");
+                    ChangeState(PlayerState.Death);
+                }
+
             }
             //spawn point check
             if (hit.collider.tag == "SpawnPoint")
