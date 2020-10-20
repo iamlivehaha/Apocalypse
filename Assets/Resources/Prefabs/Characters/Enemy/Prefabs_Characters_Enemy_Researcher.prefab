@@ -1063,7 +1063,7 @@ MonoBehaviour:
   m_boxCollider: {fileID: 0}
   m_rigidbody: {fileID: 0}
   bPatrol: 1
-  m_defaultDir: 1
+  m_defaultDir: 0
   m_defaultPosition: {fileID: 0}
   m_patrolLine:
   - {fileID: 0}
@@ -2393,8 +2393,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4308274, y: 0.32749635, z: 1}
-  m_Center: {x: 0.22715583, y: -0.05475388, z: -0.00000008046195}
+  m_Size: {x: 0.4062047, y: 0.30677092, z: 1}
+  m_Center: {x: 0.13689747, y: -0.04439082, z: -0.00000003547214}
 --- !u!1 &7197356909174083440
 GameObject:
   m_ObjectHideFlags: 0

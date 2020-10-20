@@ -128,9 +128,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             //return to idle state and come back to default position
             if (!bPatrol&&currentState==EnemyState.Idle)
             {
-                Vector3 diretion = (m_defaultPosition.position - transform.position).normalized;
+                Vector3 diretion = (m_defaultPosition.position - transform.position);
                 m_animator.SetFloat("idleDir",diretion.x);
-                FlipXCharacter(diretion.x);
+                if (Mathf.Abs(diretion.x)>=0.1f)
+                {
+                    FlipXCharacter(diretion.x);
+                }
+                else
+                {
+                    FlipXCharacter(mDefaultDirection.x);
+                }
                 diretion += Gravity();
                 transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
             }

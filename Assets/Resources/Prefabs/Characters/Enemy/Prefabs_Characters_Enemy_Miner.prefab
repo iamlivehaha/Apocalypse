@@ -1125,7 +1125,8 @@ MonoBehaviour:
   m_boxCollider: {fileID: 0}
   m_rigidbody: {fileID: 0}
   bPatrol: 1
-  m_defaultDir: 1
+  m_defaultDir: 0
+  m_defaultPosition: {fileID: 0}
   m_patrolLine:
   - {fileID: 0}
   - {fileID: 0}
