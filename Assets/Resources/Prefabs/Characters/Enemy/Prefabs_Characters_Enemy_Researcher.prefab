@@ -1070,6 +1070,8 @@ MonoBehaviour:
   - {fileID: 0}
   m_currentDestination: {fileID: 0}
   m_nextDestination: {fileID: 0}
+  bGrounded: 1
+  m_gravityScale: 9.8
   m_patrolSpeed: 1
   m_chasingSpeed: 2
   m_confusingTime: 2

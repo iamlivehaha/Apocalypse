@@ -1,0 +1,153 @@
+
+lr.png
+size: 1446,514
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arrow
+  rotate: false
+  xy: 2, 34
+  size: 401, 30
+  orig: 401, 30
+  offset: 0, 0
+  index: -1
+belt
+  rotate: true
+  xy: 1367, 114
+  size: 196, 77
+  orig: 196, 77
+  offset: 0, 0
+  index: -1
+body2
+  rotate: true
+  xy: 402, 131
+  size: 262, 389
+  orig: 273, 389
+  offset: 0, 0
+  index: -1
+bow
+  rotate: false
+  xy: 402, 395
+  size: 620, 117
+  orig: 621, 117
+  offset: 0, 0
+  index: -1
+bow2
+  rotate: false
+  xy: 640, 24
+  size: 203, 105
+  orig: 207, 105
+  offset: 0, 0
+  index: -1
+eyes
+  rotate: false
+  xy: 2, 16
+  size: 93, 16
+  orig: 93, 16
+  offset: 0, 0
+  index: -1
+fur
+  rotate: false
+  xy: 1024, 372
+  size: 321, 140
+  orig: 321, 140
+  offset: 0, 0
+  index: -1
+fur2
+  rotate: false
+  xy: 2, 66
+  size: 398, 446
+  orig: 398, 446
+  offset: 0, 0
+  index: -1
+harm
+  rotate: false
+  xy: 1236, 48
+  size: 129, 197
+  orig: 129, 197
+  offset: 0, 0
+  index: -1
+harm2
+  rotate: false
+  xy: 405, 26
+  size: 233, 103
+  orig: 233, 103
+  offset: 0, 0
+  index: -1
+head
+  rotate: true
+  xy: 793, 131
+  size: 262, 151
+  orig: 262, 152
+  offset: 0, 1
+  index: -1
+hfoot
+  rotate: false
+  xy: 1036, 64
+  size: 110, 61
+  orig: 110, 61
+  offset: 0, 0
+  index: -1
+hhand
+  rotate: true
+  xy: 1367, 14
+  size: 98, 67
+  orig: 98, 67
+  offset: 0, 0
+  index: -1
+hleg
+  rotate: true
+  xy: 946, 127
+  size: 117, 288
+  orig: 117, 288
+  offset: 0, 0
+  index: -1
+jingtanhao
+  rotate: false
+  xy: 1331, 247
+  size: 24, 63
+  orig: 24, 63
+  offset: 0, 0
+  index: -1
+qarm
+  rotate: false
+  xy: 1347, 312
+  size: 94, 200
+  orig: 94, 200
+  offset: 0, 0
+  index: -1
+qarm2
+  rotate: false
+  xy: 845, 8
+  size: 189, 117
+  orig: 203, 118
+  offset: 14, 0
+  index: -1
+qfoot
+  rotate: false
+  xy: 1036, 2
+  size: 108, 60
+  orig: 108, 60
+  offset: 0, 0
+  index: -1
+qhand
+  rotate: true
+  xy: 1230, 247
+  size: 123, 99
+  orig: 123, 99
+  offset: 0, 0
+  index: -1
+qleg
+  rotate: true
+  xy: 946, 246
+  size: 124, 282
+  orig: 124, 282
+  offset: 0, 0
+  index: -1
+wenhao
+  rotate: false
+  xy: 1148, 64
+  size: 41, 61
+  orig: 42, 61
+  offset: 0, 0
+  index: -1

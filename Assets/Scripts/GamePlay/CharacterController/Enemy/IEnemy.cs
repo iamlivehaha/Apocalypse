@@ -44,8 +44,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public Transform m_currentDestination = null;
         public Transform m_nextDestination = null;
 
-
-
+        [Header("Physic Property")]
+        public bool bGrounded = true;
+        public float m_gravityScale = 6.6f;
 
         [Header("Behavior Property")]
         public float m_patrolSpeed = 1.0f;
@@ -61,12 +62,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         [SerializeField]
         public EnemyState previousState, currentState;
-        private float m_gravityScale = 9.8f;
         private GameObject m_visuals = null;
 
         public bool bTargetInView = false;
         public bool bTargetInAttackRange = false;
-        private bool bGrounded = true;
         private float moveSpeed = 1.0f;
         private Vector3 mDefaultDirection;
 
@@ -139,7 +138,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     FlipXCharacter(mDefaultDirection.x);
                 }
                 diretion += Gravity();
-                transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
+                Move(diretion);
+
             }
             //determine line when return to patrol 
             if (bPatrol && previousState == EnemyState.Confusing)
@@ -198,7 +198,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
                     FlipXCharacter(diretion.x);
                     diretion += Gravity();
-                    transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
+                    Move(diretion);
                 }
                 else if (bTargetInView)
                 {
@@ -212,8 +212,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                         diretion = Vector3.zero;
                     }
                     FlipXCharacter(m_target.position.x - transform.position.x);
-                    //m_visuals.transform.localScale = new Vector3(diretion.x > 0 ? 1 : -1, transform.localScale.y, transform.localScale.z);
-                    transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime, Space.World);
+                    Move(diretion);
+
                 }
                 #endregion
             }
@@ -243,6 +243,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (stateChanged)
             {
                 HandleStateChanged();
+            }
+        }
+
+        private void Move(Vector3 m_diretion)
+        {
+            if (GroundCheck(new Vector3(m_diretion.x, 0, 0)))
+            {
+                transform.Translate(m_diretion * moveSpeed * Time.fixedDeltaTime);
             }
         }
         private bool ViewCheck()
@@ -280,7 +288,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         private Vector3 Gravity()
         {
             Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * Time.fixedDeltaTime;
-            if (GroundCheck())
+            if (!GroundCheck(Vector3.zero))
             {
                 return gravityDeltaVelocity;
             }
@@ -289,11 +297,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 return Vector3.zero;
             }
         }
-        private bool GroundCheck()
+        private bool GroundCheck(Vector3 Check_offset)
         {
-            //Physics.Raycast(射线发出位置，射线方向，射线长度，射线碰撞检测Layer）
-            bGrounded = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), 2.50f);
-
+            Debug.DrawRay(transform.position, Vector2.down * 0.5f, Color.red);
+            bool bhit = Physics.Raycast(transform.position+ Check_offset, Vector2.down, 0.5f);
+            bGrounded = bhit;
             return bGrounded;
         }
 
