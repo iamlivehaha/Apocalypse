@@ -468,9 +468,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         }
 
 
-        public void SetInteract()
+        public void AwakenPlayer()
         {
-            m_isInteractByUI = true;
+            Debug.Log("respawn");
+            m_animator.SetTrigger("awake");
         }
     }
 };

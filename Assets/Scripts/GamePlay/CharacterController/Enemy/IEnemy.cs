@@ -39,9 +39,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         [Header("Patrol Line Setting")]
         public bool bPatrol = true;
         public DefaultDirection m_defaultDir = DefaultDirection.Right;
+        public Transform m_defaultPosition;
         public List<Transform> m_patrolLine;
         public Transform m_currentDestination = null;
         public Transform m_nextDestination = null;
+
 
 
 
@@ -67,6 +69,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         private bool bGrounded = true;
         private float moveSpeed = 1.0f;
         private Vector3 mDefaultDirection;
+
 
         protected IEnemy() { }
 
@@ -98,6 +101,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public override void Init()
         {
             mDefaultDirection = m_defaultDir == DefaultDirection.Right ? Vector3.right : Vector3.left;
+
+
             if (bPatrol && m_patrolLine.Count == 0)
             {
                 bPatrol = false;
@@ -120,6 +125,15 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         private void FixedUpdate()
         {
+            //return to idle state and come back to default position
+            if (!bPatrol&&currentState==EnemyState.Idle)
+            {
+                Vector3 diretion = (m_defaultPosition.position - transform.position).normalized;
+                m_animator.SetFloat("idleDir",diretion.x);
+                FlipXCharacter(diretion.x);
+                diretion += Gravity();
+                transform.Translate(diretion * moveSpeed * Time.fixedDeltaTime);
+            }
             //determine line when return to patrol 
             if (bPatrol && previousState == EnemyState.Confusing)
             {
@@ -333,7 +347,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 case EnemyState.Idle:
                     stateName = "idle";
-                    m_animator.SetTrigger(stateName);
+                    //back to default place
                     break;
                 case EnemyState.Patrol:
                     stateName = "patrol";

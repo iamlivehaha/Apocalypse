@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.GamePlay.CharacterController.Player;
+using UnityEngine;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon
 {
@@ -16,6 +17,19 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon
         
         }
 
+        public void OnCollisionEnter(Collision col)
+        {
+            //spawn point check
+            if (col.collider.tag == "Player")
+            {
+                PlayerMoveController player = col.transform.GetComponent<PlayerMoveController>();
+                if (player!=null&& player.m_godenFinger)
+                {
+                    Debug.Log("you die!");
+                    player.ChangeState(PlayerMoveController.PlayerState.Death);
+                }
+            }
+        }
         protected override void ShowAttackEffect()
         {
             throw new System.NotImplementedException();

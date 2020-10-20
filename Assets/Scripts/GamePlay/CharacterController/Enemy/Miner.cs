@@ -22,6 +22,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_rigidbody = GetComponent<Rigidbody>();
             m_skeletonComponent = transform.Find("Visuals/Miner").GetComponent<ISkeletonComponent>();
             m_target = GameObject.FindGameObjectWithTag("Player").transform;
+
             if (m_WeaponCollider==null)
             {
                 Debug.LogError("m_WeaponCollider is not set correctly");
@@ -29,6 +30,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             else
             {
                 m_WeaponCollider.enabled = false;
+            }
+            if (!bPatrol)
+            {
+                m_defaultPosition = Instantiate(new GameObject(gameObject.name + "_defaultPos"), transform.position,
+                    Quaternion.identity).transform;
             }
 
             // property setting
