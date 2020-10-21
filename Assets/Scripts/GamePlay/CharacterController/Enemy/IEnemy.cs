@@ -249,12 +249,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         private void Move(Vector3 m_diretionX,Vector3 m_diretionY)
         {
-            if (GroundCheck(new Vector3(m_diretionX.x, 0, 0)))
+            if (GroundCheck(new Vector3(m_diretionX.x, 0.3f, 0)))
             {
                 transform.Translate(m_diretionX * moveSpeed * Time.fixedDeltaTime);
             }
 
-            if (!GroundCheck(new Vector3(0, 0, 0)))
+            if (!GroundCheck(new Vector3(0, 0.3f, 0)))
             {
                 transform.Translate(m_diretionY * moveSpeed * Time.fixedDeltaTime);
             }
@@ -294,7 +294,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         private Vector3 Gravity()
         {
             Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * Time.fixedDeltaTime;
-            if (!GroundCheck(Vector3.zero))
+            if (!GroundCheck(new Vector3(0, 0.3f, 0)))
             {
                 return gravityDeltaVelocity;
             }
@@ -305,7 +305,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
         private bool GroundCheck(Vector3 Check_offset)
         {
-            Debug.DrawRay(transform.position, Vector2.down * 0.5f, Color.red);
+            Debug.DrawRay(transform.position+ Check_offset, Vector2.down * 0.5f, Color.red);
             bool bhit = Physics.Raycast(transform.position + Check_offset, Vector2.down, 0.5f);
             bGrounded = bhit;
             return bGrounded;
