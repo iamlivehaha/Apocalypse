@@ -52,12 +52,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public float m_patrolSpeed = 1.0f;
         public float m_chasingSpeed = 2.0f;
         public float m_confusingTime = 2;
-        public float m_tempConfusingTime = 2;
+        private float m_tempConfusingTime = 2;
         public bool m_isConfusing = false;
         public float m_attackInterval = 1.0f;
         public float m_viewDistance = 20.0f;
         public float m_viewAngle = 180;
-        public float m_heightoffset =3;
+        public float m_heightoffset = 3;
         public Transform m_target = null;
 
         [SerializeField]
@@ -125,20 +125,15 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         private void FixedUpdate()
         {
             //return to idle state and come back to default position
-            if (!bPatrol&&currentState==EnemyState.Idle)
+            if (!bPatrol && currentState == EnemyState.Idle)
             {
                 Vector3 diretion = (m_defaultPosition.position - transform.position);
-                m_animator.SetFloat("idleDir",diretion.x);
-                if (Mathf.Abs(diretion.x)>=0.1f)
-                {
-                    FlipXCharacter(diretion.x);
-                }
-                else
-                {
-                    FlipXCharacter(mDefaultDirection.x);
-                }
-                diretion += Gravity();
-                Move(diretion);
+                m_animator.SetFloat("idleDir", diretion.x);
+
+                FlipXCharacter(Mathf.Abs(diretion.x) >= 0.2f ? diretion.x : mDefaultDirection.x);
+                diretion.x = Mathf.Abs(diretion.x) >= 0.2f ? diretion.normalized.x : 0;
+
+                Move(diretion, Gravity());
 
             }
             //determine line when return to patrol 
@@ -197,8 +192,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 {
                     Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
                     FlipXCharacter(diretion.x);
-                    diretion += Gravity();
-                    Move(diretion);
+                    Move(diretion, Gravity());
                 }
                 else if (bTargetInView)
                 {
@@ -212,7 +206,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                         diretion = Vector3.zero;
                     }
                     FlipXCharacter(m_target.position.x - transform.position.x);
-                    Move(diretion);
+                    Move(diretion,Vector3.zero);
 
                 }
                 #endregion
@@ -232,9 +226,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
             else if (bPatrol == false)
             {
-                currentState = EnemyState.Idle;
-            }
+                if (previousState == EnemyState.Chasing&&bTargetInView==false&&!m_isConfusing)
+                {
+                    currentState = EnemyState.Confusing;
+                }
+                else if (!m_isConfusing)
+                {
+                    currentState = EnemyState.Idle;
+                }
 
+            }
 
             bool stateChanged = previousState != currentState;//semaphore
             if (stateChanged)
@@ -246,17 +247,22 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
         }
 
-        private void Move(Vector3 m_diretion)
+        private void Move(Vector3 m_diretionX,Vector3 m_diretionY)
         {
-            if (GroundCheck(new Vector3(m_diretion.x, 0, 0)))
+            if (GroundCheck(new Vector3(m_diretionX.x, 0, 0)))
             {
-                transform.Translate(m_diretion * moveSpeed * Time.fixedDeltaTime);
+                transform.Translate(m_diretionX * moveSpeed * Time.fixedDeltaTime);
+            }
+
+            if (!GroundCheck(new Vector3(0, 0, 0)))
+            {
+                transform.Translate(m_diretionY * moveSpeed * Time.fixedDeltaTime);
             }
         }
         private bool ViewCheck()
         {
             Vector3 forward = mDefaultDirection.normalized;//人物前方正方向
-            if (m_target==null)
+            if (m_target == null)
             {
                 m_target = GameObject.FindGameObjectWithTag("Player").transform;
             }
@@ -264,13 +270,13 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             float tempangle = Vector3.Angle(forward, playerDir);//求出角度
             RaycastHit hitInfo;
             //向被检测物体发射射线，为了判断之间是否有障碍物遮挡
-            bool bhit = Physics.Raycast(transform.position + Vector3.up* m_heightoffset, playerDir, out hitInfo,m_viewDistance);
+            bool bhit = Physics.Raycast(transform.position + Vector3.up * m_heightoffset, playerDir, out hitInfo, m_viewDistance);
             Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_viewDistance, Color.red);
-            Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_weapon.m_range,Color.yellow);
+            Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_weapon.m_range, Color.yellow);
             //Debug.Log("distance"+playerDir.magnitude+"tempangle "+tempangle+"bhit =="+bhit);
-            if (tempangle < 0.5f * m_viewAngle && (bhit == false || hitInfo.collider.tag != "Wall"))
+            if (tempangle < 0.5f * m_viewAngle && (bhit == false || (hitInfo.collider.tag != "Wall" && hitInfo.collider.tag != "Ground")))
             {
-                if (playerDir.magnitude<=m_viewDistance)//player detected in view distance
+                if (playerDir.magnitude <= m_viewDistance)//player detected in view distance
                 {
                     return true;
                 }
@@ -300,7 +306,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         private bool GroundCheck(Vector3 Check_offset)
         {
             Debug.DrawRay(transform.position, Vector2.down * 0.5f, Color.red);
-            bool bhit = Physics.Raycast(transform.position+ Check_offset, Vector2.down, 0.5f);
+            bool bhit = Physics.Raycast(transform.position + Check_offset, Vector2.down, 0.5f);
             bGrounded = bhit;
             return bGrounded;
         }
@@ -330,7 +336,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         public void OnTriggerStay(Collider collider)
         {
-            if (collider.gameObject.tag == "Player" && collider.transform.position.y > transform.position.y+m_heightoffset)
+            if (collider.gameObject.tag == "Player" && collider.transform.position.y > transform.position.y + m_heightoffset)
             {
                 Debug.Log("very hurt!");
                 if (currentState == EnemyState.Patrol || currentState == EnemyState.Idle)
@@ -372,6 +378,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 case EnemyState.Chasing:
                     stateName = "chasing";
                     moveSpeed = m_chasingSpeed;
+                    m_isConfusing = true;
                     m_animator.SetTrigger("angry");
                     break;
                 case EnemyState.Confusing:

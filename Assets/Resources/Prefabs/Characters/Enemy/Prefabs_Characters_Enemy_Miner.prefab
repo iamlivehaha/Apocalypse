@@ -1124,7 +1124,7 @@ MonoBehaviour:
   m_weapon: {fileID: 2527899317337023301}
   m_boxCollider: {fileID: 0}
   m_rigidbody: {fileID: 0}
-  bPatrol: 1
+  bPatrol: 0
   m_defaultDir: 0
   m_defaultPosition: {fileID: 0}
   m_patrolLine:
@@ -1137,11 +1137,10 @@ MonoBehaviour:
   m_patrolSpeed: 1
   m_chasingSpeed: 2
   m_confusingTime: 2
-  m_tempConfusingTime: 2
   m_isConfusing: 0
   m_attackInterval: 2.5
   m_viewDistance: 25
-  m_viewAngle: 180
+  m_viewAngle: 150
   m_heightoffset: 5
   m_target: {fileID: 0}
   previousState: 0
