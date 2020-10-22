@@ -42,8 +42,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
 
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             //check attack angle
             if (!isBlock)
             {

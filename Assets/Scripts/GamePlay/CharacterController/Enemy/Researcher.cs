@@ -35,11 +35,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_animator.SetBool("bpatrol", bPatrol);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
 
         public override void Attack(GameObject o)
         {

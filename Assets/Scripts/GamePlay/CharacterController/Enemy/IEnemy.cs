@@ -122,7 +122,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_visuals = transform.Find("Visuals").gameObject;
         }
 
-        private void FixedUpdate()
+        protected virtual void Update()
         {
             //return to idle state and come back to default position
             if (!bPatrol && currentState == EnemyState.Idle)
@@ -183,7 +183,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     m_isConfusing = false;
                     m_tempConfusingTime = m_confusingTime;
                 }
-                m_tempConfusingTime -= Time.fixedDeltaTime;
+                m_tempConfusingTime -= Time.deltaTime;
             }
             else
             {
@@ -251,12 +251,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         {
             if (GroundCheck(new Vector3(m_diretionX.x, 0.3f, 0)))
             {
-                transform.Translate(m_diretionX * moveSpeed * Time.fixedDeltaTime);
+                transform.Translate(m_diretionX * moveSpeed * Time.deltaTime);
             }
 
             if (!GroundCheck(new Vector3(0, 0.3f, 0)))
             {
-                transform.Translate(m_diretionY * moveSpeed * Time.fixedDeltaTime);
+                transform.Translate(m_diretionY * moveSpeed * Time.deltaTime);
             }
         }
         private bool ViewCheck()
@@ -293,7 +293,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
         private Vector3 Gravity()
         {
-            Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * Time.fixedDeltaTime;
+            Vector3 gravityDeltaVelocity = Physics.gravity * m_gravityScale * Time.deltaTime;
             if (!GroundCheck(new Vector3(0, 0.3f, 0)))
             {
                 return gravityDeltaVelocity;
