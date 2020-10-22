@@ -65,7 +65,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 {
                     isBlock = false;
                 }
-                Debug.Log("Block angle = "+ rotz);
+                //Debug.Log("Block angle = "+ rotz);
                 m_animator.SetBool("isblock", isBlock);
 
             }
@@ -94,8 +94,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     m_WeaponCollider.enabled = true;
                     CheckAttackAngle();
                     m_animator.SetTrigger("attack");
-                    yield return new WaitForSeconds(m_attackInterval);
+                    yield return new WaitForSeconds(m_attackInterval*0.5f);
                     m_WeaponCollider.enabled = false;
+                    yield return new WaitForSeconds(m_attackInterval * 0.5f);
                     isBlock = false;
                     m_animator.SetBool("isblock", isBlock);
                 }

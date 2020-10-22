@@ -24,5 +24,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon
         {
             throw new System.NotImplementedException();
         }
+
+        public override void Attack(GameObject theTarget, Quaternion rot)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

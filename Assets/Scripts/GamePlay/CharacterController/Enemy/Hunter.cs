@@ -13,10 +13,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public override void Init()
         {
             base.Init();
-            m_animator = transform.Find("Visuals/Researcher").GetComponent<Animator>();
+            m_animator = transform.Find("Visuals/Hunter").GetComponent<Animator>();
             m_boxCollider = GetComponent<BoxCollider>();
             m_rigidbody = GetComponent<Rigidbody>();
-            m_skeletonComponent = transform.Find("Visuals/Researcher").GetComponent<ISkeletonComponent>();
+            m_skeletonComponent = transform.Find("Visuals/Hunter").GetComponent<ISkeletonComponent>();
             m_target = GameObject.FindGameObjectWithTag("Player").transform;
 
             if (!bPatrol)
@@ -30,8 +30,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
 
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             LookTarget(m_target.transform);
         }
 
@@ -58,6 +59,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 {
                     m_animator.SetTrigger("attack");
                     //todo arrow attack 
+                    m_weapon.Attack(m_target.gameObject,lookRot);
                     yield return new WaitForSeconds(m_attackInterval);
                 }
                 else // no target so do nothing
@@ -69,12 +71,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
         public override void Attack(GameObject o)
         {
-            throw new System.NotImplementedException();
+            StartCoroutine(StartAttack(o.transform));
         }
 
         public override void UnderAttack(GameObject o)
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

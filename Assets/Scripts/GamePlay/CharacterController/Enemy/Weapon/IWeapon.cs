@@ -45,11 +45,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon
         }
 
         public abstract void Attack(GameObject theTarget);
+        public abstract void Attack(GameObject theTarget, Quaternion rot);
 
         public void Release()
         {
             m_weaponOwner = null;
             Destroy(this.gameObject);
         }
+
+
     }
 }
