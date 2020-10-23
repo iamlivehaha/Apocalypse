@@ -1389,7 +1389,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 100
+  field of view: 50
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -5946,7 +5946,17 @@ PrefabInstance:
     - target: {fileID: 3771280011976068077, guid: 262d075e49b6b2d45b2c78bfc61da72c,
         type: 3}
       propertyPath: m_viewDistance
-      value: 60
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3771280011976068077, guid: 262d075e49b6b2d45b2c78bfc61da72c,
+        type: 3}
+      propertyPath: m_viewAngle
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3771280011976068077, guid: 262d075e49b6b2d45b2c78bfc61da72c,
+        type: 3}
+      propertyPath: m_heightoffset
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4588681836186551954, guid: 262d075e49b6b2d45b2c78bfc61da72c,
         type: 3}
@@ -10712,12 +10722,12 @@ PrefabInstance:
     - target: {fileID: 314096895751063241, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 182.03
+      value: 187.74
       objectReference: {fileID: 0}
     - target: {fileID: 314096895751063241, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 54.37
+      value: 73.8
       objectReference: {fileID: 0}
     - target: {fileID: 314096895751063241, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
@@ -10767,7 +10777,7 @@ PrefabInstance:
     - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_wallJumpMaskInputXTime
-      value: 0.6
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
@@ -10782,7 +10792,12 @@ PrefabInstance:
     - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
       propertyPath: m_forceCrouchVelocity
-      value: 20
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 314096895751063246, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
+        type: 3}
+      propertyPath: m_forceCrouchDuration
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2742640888572462533, guid: 702e0aa9a38ec9243a3e42ca57ff1eb3,
         type: 3}
@@ -14729,7 +14744,7 @@ PrefabInstance:
     - target: {fileID: 3771280011850588140, guid: 262d075e49b6b2d45b2c78bfc61da72c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 212.924
+      value: 204.71
       objectReference: {fileID: 0}
     - target: {fileID: 3771280011850588140, guid: 262d075e49b6b2d45b2c78bfc61da72c,
         type: 3}
