@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using Assets.Scripts.GamePlay.CharacterController.Player;
+using Assets.Scripts.Managers;
 using UnityEngine;
 
 namespace Assets.Scripts.GamePlay
@@ -7,7 +9,7 @@ namespace Assets.Scripts.GamePlay
     {
         public Transform m_head;
         public Transform m_fwd;
-        public Vector3 m_fwdVector;
+        private Vector3 m_fwdVector;
 
         [Header("Components")]
         public BoxCollider m_headCol;
@@ -19,6 +21,7 @@ namespace Assets.Scripts.GamePlay
         public float m_shootVelocity;
         public float m_destroyTime = 10f;
         public bool m_isHit = false;
+        public float destoryAnimPlayTime = 1.4f;//wait until anim play finished
 
 
         void Awake()
@@ -54,6 +57,7 @@ namespace Assets.Scripts.GamePlay
         public void OnTriggerEnter(Collider col)
         {
             Debug.Log("hit! "+ col.gameObject);
+            
             if (col.transform.tag=="Wall"||col.transform.tag=="Ground")
             {
                 m_isHit = true;
@@ -61,7 +65,13 @@ namespace Assets.Scripts.GamePlay
             }
             else if(col.transform.tag=="Player")
             {
-                StartCoroutine(DestoryArrow());
+                m_isHit = true;
+                Debug.Log("hit! Player in " + col.transform.position.y + "Arrow in " + transform.position.y);
+                if (col.transform.position.y<transform.position.y)
+                {
+                    PlayerManager.Instance().m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Death);
+                }
+                StartCoroutine(DestoryArrow(destoryAnimPlayTime));
             }
         }
 
@@ -71,13 +81,13 @@ namespace Assets.Scripts.GamePlay
             m_animator.SetBool("isHit",m_isHit);
             m_animator.SetTrigger("hit");
             yield return new WaitForSeconds(3f);
-            StartCoroutine(DestoryArrow());
+            StartCoroutine(DestoryArrow(m_destroyTime));
         }
 
-        IEnumerator DestoryArrow()
+        IEnumerator DestoryArrow(float destoryTime)
         {
-            float destoryAnimPlayTime = 3;//wait until anim play finished
-            yield return new WaitForSeconds(m_destroyTime- destoryAnimPlayTime);
+            m_headCol.enabled = false;
+            yield return new WaitForSeconds(destoryTime - destoryAnimPlayTime);
             m_animator.SetTrigger("break");
             yield return new WaitForSeconds(destoryAnimPlayTime);
             Destroy(gameObject);

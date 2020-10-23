@@ -12,7 +12,7 @@ namespace Assets.Scripts.Managers
         /// <summary>移动控制</summary>
         [SerializeField]
         private GameObject m_playerGO;
-        private PlayerMoveController m_moveCtrl = null;
+        public PlayerMoveController m_moveCtrl = null;
         List<GameObject> spawnpoints = new List<GameObject>();
         [SerializeField]
         public Transform m_defaultSP;
@@ -42,8 +42,8 @@ namespace Assets.Scripts.Managers
         {
             SetMoveEnable(false);
             m_playerGO.transform.position = spawnpoint.position+new Vector3(0,0.5f,0);
-            m_playerGO.GetComponent<PlayerMoveController>().AwakenPlayer();
-            yield return new WaitForSeconds(3f);//wait for death and spawn animation
+            //m_playerGO.GetComponent<PlayerMoveController>().AwakenPlayer();
+            yield return new WaitForSeconds(2f);//wait for death and spawn animation
             m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Idle);
             SetMoveEnable(true);
             yield break;

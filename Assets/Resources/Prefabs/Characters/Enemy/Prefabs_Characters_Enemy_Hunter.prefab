@@ -558,7 +558,7 @@ MonoBehaviour:
   m_currentDestination: {fileID: 0}
   m_nextDestination: {fileID: 0}
   bGrounded: 1
-  m_gravityScale: 6.6
+  m_gravityScale: 9.8
   m_patrolSpeed: 1
   m_chasingSpeed: 2
   m_confusingTime: 2
@@ -572,7 +572,7 @@ MonoBehaviour:
   currentState: 0
   bTargetInView: 0
   bTargetInAttackRange: 0
-  Attackoffset: 6
+  Attackoffset: 8
 --- !u!1 &1776229416458559185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,7 +1284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3410759646144848016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.92, y: -0.11, z: 0}
+  m_LocalPosition: {x: -6.81, y: 0.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 947694476}
