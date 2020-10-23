@@ -51,8 +51,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         [Header("Behavior Property")]
         public float m_patrolSpeed = 1.0f;
         public float m_chasingSpeed = 2.0f;
-        public float m_confusingTime = 2;
-        private float m_tempConfusingTime = 2;
+        public float m_confusingTime;
+        private float m_tempConfusingTime;
         public bool m_isConfusing = false;
         public float m_attackInterval = 1.0f;
         public float m_viewDistance = 20.0f;
@@ -100,7 +100,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public override void Init()
         {
             mDefaultDirection = m_defaultDir == DefaultDirection.Right ? Vector3.right : Vector3.left;
-
+            m_tempConfusingTime = m_confusingTime;
 
             if (bPatrol && m_patrolLine.Count == 0)
             {
@@ -226,11 +226,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
             else if (bPatrol == false)
             {
-                if (previousState == EnemyState.Chasing&&bTargetInView==false&&!m_isConfusing)
+                if ((previousState == EnemyState.Chasing|| previousState == EnemyState.Attack) 
+                    &&bTargetInView==false&&!m_isConfusing)
                 {
                     currentState = EnemyState.Confusing;
                 }
-                else if (!m_isConfusing)
+                else if (!m_isConfusing&& previousState == EnemyState.Confusing)
                 {
                     currentState = EnemyState.Idle;
                 }

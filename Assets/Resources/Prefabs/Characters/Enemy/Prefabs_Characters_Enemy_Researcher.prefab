@@ -1074,7 +1074,7 @@ MonoBehaviour:
   m_gravityScale: 9.8
   m_patrolSpeed: 1
   m_chasingSpeed: 2
-  m_confusingTime: 2.8
+  m_confusingTime: 2.6
   m_isConfusing: 0
   m_attackInterval: 1
   m_viewDistance: 15

@@ -40,6 +40,11 @@ namespace Assets.Scripts.GamePlay
         // Update is called once per frame
         void Update()
         {
+            if (m_isHit)
+            {
+                m_fwdVector = Vector3.zero;
+                m_rigidbody.Sleep();
+            }
             if (!m_isHit)
             {
                 transform.Translate(m_shootVelocity* m_fwdVector);
@@ -48,6 +53,7 @@ namespace Assets.Scripts.GamePlay
 
         public void OnTriggerEnter(Collider col)
         {
+            Debug.Log("hit! "+ col.gameObject);
             if (col.transform.tag=="Wall"||col.transform.tag=="Ground")
             {
                 m_isHit = true;
@@ -70,7 +76,10 @@ namespace Assets.Scripts.GamePlay
 
         IEnumerator DestoryArrow()
         {
-            yield return new WaitForSeconds(m_destroyTime);
+            float destoryAnimPlayTime = 3;//wait until anim play finished
+            yield return new WaitForSeconds(m_destroyTime- destoryAnimPlayTime);
+            m_animator.SetTrigger("break");
+            yield return new WaitForSeconds(destoryAnimPlayTime);
             Destroy(gameObject);
         }
     }

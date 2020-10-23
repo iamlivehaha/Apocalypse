@@ -33,16 +33,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         protected override void Update()
         {
             base.Update();
-            LookTarget(m_target.transform);
+            LookTarget(m_target.transform.position+new Vector3(0,1,0));
         }
 
-        private void LookTarget(Transform mTarget)
+        private void LookTarget(Vector3 mTargetPos)
         {
-            Vector3 attackDir = (mTarget.position - transform.position).normalized;
+            Vector3 attackDir = (mTargetPos - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
-            float dir = (mTarget.position - transform.position).normalized.x;
+            float dir = (mTargetPos - transform.position).normalized.x;
             lookRot = Quaternion.AngleAxis(dir > 0 ? -angle - Attackoffset : -angle + Attackoffset, Vector3.forward);
-            m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
+            m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime*2);
             //m_weapon.transform.rotation = rot;
         }
         IEnumerator StartAttack(Transform mTarget)
