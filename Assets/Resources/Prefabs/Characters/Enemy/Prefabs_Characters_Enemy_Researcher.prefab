@@ -1065,9 +1065,7 @@ MonoBehaviour:
   bPatrol: 0
   m_defaultDir: 0
   m_defaultPosition: {fileID: 0}
-  m_patrolLine:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_patrolLine: []
   m_currentDestination: {fileID: 0}
   m_nextDestination: {fileID: 0}
   bGrounded: 1
@@ -1085,6 +1083,7 @@ MonoBehaviour:
   currentState: 0
   bTargetInView: 0
   bTargetInAttackRange: 0
+  mDefaultDirection: {x: 0, y: 0, z: 0}
   m_WeaponCollider: {fileID: 2665073803795694540}
 --- !u!54 &1474983557
 Rigidbody:

@@ -67,7 +67,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public bool bTargetInView = false;
         public bool bTargetInAttackRange = false;
         private float moveSpeed = 1.0f;
-        private Vector3 mDefaultDirection;
+        public Vector3 mForWardDirection;
+        public Vector3 mDefaultDirection;
 
 
         protected IEnemy() { }
@@ -108,11 +109,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 Debug.LogError("The Patrol Line of " + gameObject + " hasn't been set!");
             }
 
-            if (bPatrol && m_patrolLine.Count == 1)
-            {
-                m_currentDestination = m_patrolLine[0];
-                m_nextDestination = m_patrolLine[0];
-            }
             if (bPatrol && m_patrolLine.Count >= 2)
             {
                 m_currentDestination = m_patrolLine[0];
@@ -125,16 +121,20 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         protected virtual void Update()
         {
             //return to idle state and come back to default position
-            if (!bPatrol && currentState == EnemyState.Idle)
+            if (!bPatrol)
             {
                 Vector3 diretion = (m_defaultPosition.position - transform.position);
                 m_animator.SetFloat("idleDir", diretion.x);
 
-                FlipXCharacter(Mathf.Abs(diretion.x) >= 0.2f ? diretion.x : mDefaultDirection.x);
-                diretion.x = Mathf.Abs(diretion.x) >= 0.2f ? diretion.normalized.x : 0;
-
-                Move(diretion, Gravity());
-
+                //check target in patrol states
+                bTargetInView = ViewCheck(Mathf.Abs(diretion.x) >= 0.2f ? diretion : mForWardDirection);
+                
+                if ( currentState == EnemyState.Idle)
+                {
+                    FlipXCharacter(Mathf.Abs(diretion.x) >= 0.2f ? diretion.x : mForWardDirection.x);
+                    diretion.x = Mathf.Abs(diretion.x) >= 0.2f ? diretion.normalized.x : 0;
+                    Move(diretion, Gravity());
+                }
             }
             //determine line when return to patrol 
             if (bPatrol && previousState == EnemyState.Confusing)
@@ -163,10 +163,13 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                         }
                     }
                 }
-                mDefaultDirection = new Vector3(m_currentDestination.position.x - transform.position.x, 0, 0);
+                mForWardDirection = new Vector3(m_currentDestination.position.x - transform.position.x, 0, 0);
             }
-            //check target is in view
-            bTargetInView = ViewCheck();
+            //check target in patrol states
+            Vector3 fwd = Mathf.Abs(mForWardDirection.x) >= 0.2f ? mForWardDirection.normalized : mDefaultDirection;
+            bTargetInView = ViewCheck(fwd);
+
+            m_animator.SetFloat("idleDir", mForWardDirection.x);
             m_animator.SetBool("targetinview", bTargetInView);
             //check target is in attack range
             if (bTargetInView)
@@ -183,6 +186,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     m_isConfusing = false;
                     m_tempConfusingTime = m_confusingTime;
                 }
+                FlipXCharacter(mDefaultDirection.x);
                 m_tempConfusingTime -= Time.deltaTime;
             }
             else
@@ -190,9 +194,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 #region patrol routine or move to target
                 if (bPatrol && bTargetInView == false)
                 {
-                    Vector3 diretion = new Vector3(m_currentDestination.position.x - transform.position.x,0,0).normalized;
-                    FlipXCharacter(diretion.x);
-                    Move(diretion, Gravity());
+                    Vector3 diretion = new Vector3(m_currentDestination.position.x - transform.position.x,0,0);
+                    if (currentState==EnemyState.Patrol)
+                    {
+                        FlipXCharacter(Mathf.Abs(diretion.x) >= 0.2f ? diretion.normalized.x : mDefaultDirection.x);
+                    }
+                    Move(diretion.normalized, Gravity());
                 }
                 else if (bTargetInView)
                 {
@@ -260,9 +267,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 transform.Translate(m_diretionY * moveSpeed * Time.deltaTime);
             }
         }
-        private bool ViewCheck()
+        private bool ViewCheck(Vector3 forward)
         {
-            Vector3 forward = mDefaultDirection.normalized;//人物前方正方向
+            //Vector3 forward = mDefaultDirection.normalized;//人物前方正方向
             if (m_target == null)
             {
                 m_target = GameObject.FindGameObjectWithTag("Player").transform;

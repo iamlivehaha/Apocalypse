@@ -35,6 +35,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 m_defaultPosition = Instantiate(new GameObject(gameObject.name + "_defaultPos"), transform.position,
                     Quaternion.identity).transform;
+                m_patrolLine.Add(m_defaultPosition);
+                m_currentDestination = m_patrolLine[0];
+                m_nextDestination = m_patrolLine[0];
+                bPatrol = true;
             }
 
             // property setting
@@ -112,7 +116,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             Vector3 attackDir = (mTarget.position - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
             float dir = (mTarget.position - transform.position).normalized.x;
-            lookRot = Quaternion.AngleAxis(dir >0?-angle-Attackoffset:-angle + Attackoffset, Vector3.forward);
+            if (m_defaultDir==DefaultDirection.Right)
+            {
+                lookRot = Quaternion.AngleAxis(dir > 0 ? -angle + Attackoffset : -angle - Attackoffset, Vector3.forward);
+            }
+            else
+            {
+                lookRot = Quaternion.AngleAxis(dir > 0 ? -angle - Attackoffset : -angle + Attackoffset, Vector3.forward);
+            }
             m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
             //m_weapon.transform.rotation = rot;
         }

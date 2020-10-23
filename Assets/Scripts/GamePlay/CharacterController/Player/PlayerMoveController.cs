@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.GamePlay.CharacterController.Enemy;
 using Assets.Scripts.Managers;
 using GamePlay;
 using Spine.Unity;
@@ -419,8 +420,17 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     m_isWallJump = true;
                 }
             }
-            //trap check and underAttack check
-            if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
+
+            //if (hit.collider.tag == "Enemy")
+            //{
+            //    Debug.Log(transform.position.y+"VS "+ hit.transform.position.y + hit.gameObject.GetComponent<IEnemy>().m_heightoffset);
+            //    if (transform.position.y > hit.transform.position.y + hit.gameObject.GetComponent<IEnemy>().m_heightoffset)
+            //    {
+            //        velocity.x = velocity.x * 0.5f;
+            //    }
+            //}
+                //trap check and underAttack check
+                if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
             {
                 if (!m_godenFinger)
                 {
@@ -429,13 +439,18 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 }
 
             }
+
+        }
+
+        public void OnTriggerEnter(Collider col)
+        {
             //spawn point check
-            if (hit.collider.tag == "SpawnPoint")
+            if (col.transform.tag == "SpawnPoint")
             {
-                if (hit.transform != m_currentSP)
+                if (col.transform != m_currentSP)
                 {
                     Debug.Log("Update spawn point!");
-                    m_currentSP = hit.transform;
+                    m_currentSP = col.transform;
                 }
             }
         }
