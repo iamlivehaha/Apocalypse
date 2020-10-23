@@ -190,7 +190,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 #region patrol routine or move to target
                 if (bPatrol && bTargetInView == false)
                 {
-                    Vector3 diretion = (m_currentDestination.position - transform.position).normalized;
+                    Vector3 diretion = new Vector3(m_currentDestination.position.x - transform.position.x,0,0).normalized;
                     FlipXCharacter(diretion.x);
                     Move(diretion, Gravity());
                 }
