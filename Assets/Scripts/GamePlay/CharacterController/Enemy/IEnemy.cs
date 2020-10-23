@@ -275,7 +275,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_viewDistance, Color.red);
             Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_weapon.m_range, Color.yellow);
             //Debug.Log("distance"+playerDir.magnitude+"tempangle "+tempangle+"bhit =="+bhit);
-            if (tempangle < 0.5f * m_viewAngle && (bhit == false || (hitInfo.collider.tag != "Wall" && hitInfo.collider.tag != "Ground")))
+            if (tempangle < 0.5f * m_viewAngle && (bhit == false || (hitInfo.collider.tag =="Player")))
             {
                 if (playerDir.magnitude <= m_viewDistance)//player detected in view distance
                 {
