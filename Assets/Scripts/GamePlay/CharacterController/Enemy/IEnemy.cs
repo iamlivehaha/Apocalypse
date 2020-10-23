@@ -274,14 +274,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 m_target = GameObject.FindGameObjectWithTag("Player").transform;
             }
-            Vector3 playerDir = m_target.transform.position - (transform.position + Vector3.up * m_heightoffset);//人物到被检测物体的方向
+            Vector3 playerDir = m_target.transform.position+Vector3.up - (transform.position + Vector3.up * m_heightoffset);//人物到被检测物体的方向
             float tempangle = Vector3.Angle(forward, playerDir);//求出角度
             RaycastHit hitInfo;
             //向被检测物体发射射线，为了判断之间是否有障碍物遮挡
             bool bhit = Physics.Raycast(transform.position + Vector3.up * m_heightoffset, playerDir, out hitInfo, m_viewDistance);
             Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_viewDistance, Color.red);
             Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_weapon.m_range, Color.yellow);
-            //Debug.Log("distance"+playerDir.magnitude+"tempangle "+tempangle+"bhit =="+bhit);
+            Debug.Log("distance"+playerDir.magnitude+"tempangle "+tempangle+"bhit =="+bhit+hitInfo.transform.tag);
             if (tempangle < 0.5f * m_viewAngle && (bhit == false || (hitInfo.collider.tag =="Player")))
             {
                 if (playerDir.magnitude <= m_viewDistance)//player detected in view distance
