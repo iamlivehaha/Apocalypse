@@ -30,6 +30,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 m_defaultPosition = Instantiate(new GameObject(gameObject.name + "_defaultPos"), transform.position,
                     Quaternion.identity).transform;
+                m_patrolLine.Clear();
                 m_patrolLine.Add(m_defaultPosition);
                 m_currentDestination = m_patrolLine[0];
                 m_nextDestination = m_patrolLine[0];

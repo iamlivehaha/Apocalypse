@@ -1206,9 +1206,7 @@ MonoBehaviour:
   bPatrol: 0
   m_defaultDir: 0
   m_defaultPosition: {fileID: 0}
-  m_patrolLine:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_patrolLine: []
   m_currentDestination: {fileID: 0}
   m_nextDestination: {fileID: 0}
   bGrounded: 1

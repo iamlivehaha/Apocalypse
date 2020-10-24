@@ -5054,6 +5054,7 @@ MonoBehaviour:
   m_wallJumpBounceVelocity: 7
   m_wallJumpMaskInputXTime: 0.6
   m_forceWallJumpVelocity: 0.5
+  m_shovelPulloutVelocity: 50
   m_interactableRadius: 0.5
   m_interactableLayer:
     serializedVersion: 2
@@ -5063,6 +5064,8 @@ MonoBehaviour:
   m_collectBro: 
   velocity: {x: 0, y: 0, z: 0}
   isWallJump: 0
+  inputJumpStop: 0
+  inputJumpStart: 0
   previousState: 0
   currentState: 0
   coliders: []
