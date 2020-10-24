@@ -18,6 +18,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public BoxCollider m_WeaponStickCollider;
         public Transform m_shovelPosition;
         public float m_shovelPulloutVelocity;
+        private bool m_pulloutJump;
+        public float m_pulloutJumpTime;
+        public float mpulloutJumpTempTime;
 
         // Start is called before the first frame update
         public override void Init()
@@ -50,8 +53,29 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
             // property setting
             m_animator.SetBool("bpatrol", bPatrol);
+            mpulloutJumpTempTime = m_pulloutJumpTime;
         }
 
+        public void FixedUpdate()
+        {
+            if (m_pulloutJump)
+            {
+                if (Mathf.Abs(mpulloutJumpTempTime) <= 0.1f)
+                {
+                    //check position and add velocity
+                    Vector3 playerPos = PlayerManager.Instance().m_moveCtrl.transform.position;
+                    if (Mathf.Abs(playerPos.y - m_shovelPosition.position.y) <= 1f
+                        && Mathf.Abs(playerPos.x - m_shovelPosition.position.x) <= 2f)
+                    {
+                        Debug.Log("Pull Out! " + playerPos.y + "VS " + m_shovelPosition.position.y);
+                        PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
+                    }
+                    m_pulloutJump = false;
+                    mpulloutJumpTempTime = m_pulloutJumpTime;
+                }
+                mpulloutJumpTempTime -= Time.fixedDeltaTime;
+            }
+        }
         // Update is called once per frame
         protected override void Update()
         {
@@ -61,14 +85,20 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 LookTarget(m_target.transform);
             }
+            //shovel jump Time trigger
+            if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("pull"))
+            {
+                m_pulloutJump = true;
+            }
 
+            //shovel jump trigger 
             if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("pullout"))
             {
                 Vector3 playerPos = PlayerManager.Instance().m_moveCtrl.transform.position;
                 if (playerPos.y- m_shovelPosition.position.y<=1.5f&&Mathf.Abs(playerPos.x- m_shovelPosition.position.x)<=1f)
                 {
-                    Debug.Log("Pull Out! " + playerPos.y + "VS " + m_shovelPosition.position.y);
-                    Debug.Log("Pull jump! " + PlayerManager.Instance().m_moveCtrl.inputJumpStart);
+                    //Debug.Log("Pull Out! " + playerPos.y + "VS " + m_shovelPosition.position.y);
+                    //Debug.Log("Pull jump! " + PlayerManager.Instance().m_moveCtrl.inputJumpStart);
                     if (PlayerManager.Instance().m_moveCtrl.inputJumpStart)
                     {
                         PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
@@ -148,6 +178,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         {
             Vector3 attackDir = (mTarget.position - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
+            angle = Mathf.Clamp(angle, 0, 5);
+            Debug.Log(angle);
             //float dir = (mTarget.position - transform.position).normalized.x;
             if (m_defaultDir==DefaultDirection.Right)
             {

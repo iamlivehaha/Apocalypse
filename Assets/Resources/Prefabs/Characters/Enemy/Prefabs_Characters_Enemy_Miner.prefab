@@ -184,7 +184,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1920573685}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.1252975, y: -1.4849998, z: 0}
+  m_LocalPosition: {x: -3.112, y: -1.701, z: 0}
   m_LocalScale: {x: 0.223608, y: 0.223608, z: 0.22361}
   m_Children: []
   m_Father: {fileID: 2018615365372999586}
@@ -1212,7 +1212,7 @@ MonoBehaviour:
   bGrounded: 1
   m_gravityScale: 9.8
   m_patrolSpeed: 1
-  m_chasingSpeed: 2
+  m_chasingSpeed: 5
   m_confusingTime: 2
   m_isConfusing: 0
   m_attackInterval: 2.5
@@ -1226,12 +1226,14 @@ MonoBehaviour:
   bTargetInAttackRange: 0
   mForWardDirection: {x: 0, y: 0, z: 0}
   mDefaultDirection: {x: 0, y: 0, z: 0}
-  Attackoffset: 45
+  Attackoffset: 55
   isBlock: 0
   m_WeaponCollider: {fileID: 842533248795516047}
   m_WeaponStickCollider: {fileID: 8207917054082386530}
   m_shovelPosition: {fileID: 1920573686}
   m_shovelPulloutVelocity: 50
+  m_pulloutJumpTime: 0.67
+  mpulloutJumpTempTime: 0
 --- !u!65 &4246237420662811807
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2027,8 +2029,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.897726, y: 0.20000002, z: 1}
-  m_Center: {x: -2.0488622, y: -1.3999993, z: 0}
+  m_Size: {x: 1.653191, y: 0.20000002, z: 1}
+  m_Center: {x: -3.1711075, y: -1.3999952, z: 0}
 --- !u!1 &7554367317939609515
 GameObject:
   m_ObjectHideFlags: 0

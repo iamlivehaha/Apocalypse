@@ -215,7 +215,6 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             }
 
             //Move Horizontal and set the air control 
-
             if (m_isWallJump)//mask the input X
             {
                 if (Mathf.Abs(m_wallJumpMaskInputXTempTime) <= 0.1f)
@@ -422,12 +421,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     m_isWallJump = true;
                 }
             }
-            //shovel jump check
-            if (hit.collider.tag == "Shovel")
-            {
-                Debug.Log("shovel jump!");
-                velocity.y = m_shovelPulloutVelocity;
-            }
+            ////shovel jump check
+            //if (hit.collider.tag == "Shovel")
+            //{
+            //    Debug.Log("shovel jump!");
+            //    velocity.y = m_shovelPulloutVelocity;
+            //}
             //trap check and underAttack check
             if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
             {
