@@ -63,10 +63,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("pullout"))
             {
                 Vector3 playerPos = PlayerManager.Instance().m_moveCtrl.transform.position;
-                Debug.Log("Pull Out! "+playerPos.y+"VS "+m_shovelPosition.position.y);
                 if (playerPos.y- m_shovelPosition.position.y<=1.5f&&Mathf.Abs(playerPos.x- m_shovelPosition.position.x)<=1f)
                 {
-                    PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
+                    Debug.Log("Pull Out! " + playerPos.y + "VS " + m_shovelPosition.position.y);
+                    Debug.Log("Pull jump! " + PlayerManager.Instance().m_moveCtrl.inputJumpStart);
+                    if (PlayerManager.Instance().m_moveCtrl.inputJumpStart)
+                    {
+                        PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
+                    }
                 }
             }
             //set weapon collider
@@ -129,14 +133,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         {
             Vector3 attackDir = (mTarget.position - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
-            float dir = (mTarget.position - transform.position).normalized.x;
+            //float dir = (mTarget.position - transform.position).normalized.x;
             if (m_defaultDir==DefaultDirection.Right)
             {
-                lookRot = Quaternion.AngleAxis(dir > 0 ? -angle + Attackoffset : -angle - Attackoffset, Vector3.forward);
+                lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
             }
             else
             {
-                lookRot = Quaternion.AngleAxis(dir > 0 ? -angle - Attackoffset : -angle + Attackoffset, Vector3.forward);
+                lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
             }
             m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
             //m_weapon.transform.rotation = rot;

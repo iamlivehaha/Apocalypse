@@ -9,7 +9,7 @@ namespace Assets.Scripts.GamePlay
     {
         public Transform m_head;
         public Transform m_fwd;
-        private Vector3 m_fwdVector;
+        public Vector3 m_fwdVector;
 
         [Header("Components")]
         public BoxCollider m_headCol;
@@ -21,7 +21,7 @@ namespace Assets.Scripts.GamePlay
         public float m_shootVelocity;
         public float m_destroyTime = 10f;
         public bool m_isHit = false;
-        public float destoryAnimPlayTime = 1.4f;//wait until anim play finished
+        public float destoryAnimPlayTime = 1.2f;//wait until anim play finished
 
 
         void Awake()
@@ -50,13 +50,16 @@ namespace Assets.Scripts.GamePlay
             }
             if (!m_isHit)
             {
-                transform.Translate(m_shootVelocity* m_fwdVector);
+                m_fwdVector = (m_fwd.position - transform.position).normalized;
+                transform.Translate(m_shootVelocity* m_fwdVector,Space.World);
             }
+            //set weapon collider
+            m_headCol.enabled = m_animator.GetCurrentAnimatorStateInfo(0).IsName("idle");
         }
 
         public void OnTriggerEnter(Collider col)
         {
-            Debug.Log("hit! "+ col.gameObject);
+            //Debug.Log("hit! "+ col.gameObject);
             
             if (col.transform.tag=="Wall"||col.transform.tag=="Ground")
             {

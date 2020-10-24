@@ -52,9 +52,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         //private float m_wallSlidingSpeed = 15;
         public float m_wallJumpUpSpeed = 30;
         public float m_wallJumpBounceVelocity = 10;
-        public float m_wallJumpMaskInputXTime = 1.3f;
+        public float m_wallJumpMaskInputXTime;
         public float m_forceWallJumpVelocity = 6f;
-        private float m_wallJumpMaskInputXTempTime = 1.3f;
+        private float m_wallJumpMaskInputXTempTime;
         private bool m_isWallJump = false;
 
         [Header("Public, Interactive Property")]
@@ -85,8 +85,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         //bool isGrounded = false;
         bool wasGrounded = false;
         public bool isWallJump = false;
-        private bool inputJumpStop;
-        private bool inputJumpStart;
+        public bool inputJumpStop;
+        public bool inputJumpStart;
 
         public PlayerState previousState, currentState;
 
@@ -105,6 +105,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             m_controller = GetComponent<UnityEngine.CharacterController>();
             m_animator = transform.Find("Visuals/Creature").GetComponent<Animator>();
             m_skeletonComponent = transform.Find("Visuals/Creature").GetComponent<ISkeletonComponent>();
+            m_wallJumpMaskInputXTempTime = m_wallJumpMaskInputXTime;
         }
         // Update is called once per frame
         void Update()

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6239786997302045856}
   - component: {fileID: 4904815558295774095}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6672509799422418120}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Fwd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 1320250902602272313}
   - component: {fileID: 6087420279208837153}
   - component: {fileID: 7065779655429604658}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Prefabs_Characters_Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ MonoBehaviour:
   m_shootVelocity: 0.1
   m_destroyTime: 10
   m_isHit: 0
-  destoryAnimPlayTime: 1.4
+  destoryAnimPlayTime: 1.2
 --- !u!65 &6087420279208837153
 BoxCollider:
   m_ObjectHideFlags: 0
