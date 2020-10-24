@@ -56,6 +56,33 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             mpulloutJumpTempTime = m_pulloutJumpTime;
         }
 
+        //public void OnTriggerStay(Collider col)
+        //{
+        //    if (col.transform.tag =="Player")
+        //    {
+        //        if (m_pulloutJump)
+        //        {
+        //            if (Mathf.Abs(mpulloutJumpTempTime) <= 0.1f)
+        //            {
+        //                //check position and add velocity
+        //                Vector3 playerPos = PlayerManager.Instance().m_moveCtrl.transform.position;
+        //                //if (Mathf.Abs(playerPos.y - m_shovelPosition.position.y) <= 1.5f
+        //                //    && Mathf.Abs(playerPos.x - m_shovelPosition.position.x) <= 2f)
+        //                //{
+        //                    Debug.Log("Pull Out! " + playerPos.y + "VS " + m_shovelPosition.position.y);
+        //                    PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
+        //                //}
+        //                m_pulloutJump = false;
+        //                mpulloutJumpTempTime = m_pulloutJumpTime;
+        //            }
+        //            mpulloutJumpTempTime -= Time.fixedDeltaTime;
+        //        }
+        //    }
+
+        //}
+
+
+
         public void FixedUpdate()
         {
             if (m_pulloutJump)
@@ -64,7 +91,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 {
                     //check position and add velocity
                     Vector3 playerPos = PlayerManager.Instance().m_moveCtrl.transform.position;
-                    if (Mathf.Abs(playerPos.y - m_shovelPosition.position.y) <= 1f
+                    if (Mathf.Abs(playerPos.y - m_shovelPosition.position.y) <= 1.5f
                         && Mathf.Abs(playerPos.x - m_shovelPosition.position.x) <= 2f)
                     {
                         Debug.Log("Pull Out! " + playerPos.y + "VS " + m_shovelPosition.position.y);
@@ -76,6 +103,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 mpulloutJumpTempTime -= Time.fixedDeltaTime;
             }
         }
+
         // Update is called once per frame
         protected override void Update()
         {
@@ -189,8 +217,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             {
                 lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
             }
-            m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
-            //m_weapon.transform.rotation = rot;
+            //m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
+            m_weapon.transform.rotation = lookRot;
         }
     }
 }
