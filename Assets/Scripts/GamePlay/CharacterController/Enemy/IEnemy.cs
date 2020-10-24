@@ -388,6 +388,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     moveSpeed = m_chasingSpeed;
                     m_isConfusing = true;
                     m_animator.SetTrigger("angry");
+                    m_animator.SetTrigger(stateName);
                     break;
                 case EnemyState.Confusing:
                     stateName = "confusing";
