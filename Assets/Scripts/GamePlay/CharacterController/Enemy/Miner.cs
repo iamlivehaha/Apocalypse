@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using Assets.Scripts.Managers;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 {
@@ -11,7 +13,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public bool isBlock = false;
 
         private Quaternion lookRot;
+        [Header("Shovel Attack Setting")]
         public BoxCollider m_WeaponCollider;
+        public Transform m_shovelPosition;
+        public float m_shovelPulloutVelocity;
 
         // Start is called before the first frame update
         public override void Init()
@@ -53,6 +58,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             if (!isBlock)
             {
                 LookTarget(m_target.transform);
+            }
+
+            if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("pullout"))
+            {
+                Vector3 playerPos = PlayerManager.Instance().m_moveCtrl.transform.position;
+                Debug.Log("Pull Out! "+playerPos.y+"VS "+m_shovelPosition.position.y);
+                if (playerPos.y- m_shovelPosition.position.y<=1.5f&&Mathf.Abs(playerPos.x- m_shovelPosition.position.x)<=1f)
+                {
+                    PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
+                }
             }
         }
 
