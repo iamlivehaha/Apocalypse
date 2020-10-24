@@ -56,6 +56,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         public float m_forceWallJumpVelocity = 6f;
         private float m_wallJumpMaskInputXTempTime;
         private bool m_isWallJump = false;
+        public float m_shovelPulloutVelocity;
 
         [Header("Public, Interactive Property")]
         //public float m_showInteractiveUIRadius = 1.0f;
@@ -421,17 +422,14 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     m_isWallJump = true;
                 }
             }
-
-            //if (hit.collider.tag == "Enemy")
-            //{
-            //    Debug.Log(transform.position.y+"VS "+ hit.transform.position.y + hit.gameObject.GetComponent<IEnemy>().m_heightoffset);
-            //    if (transform.position.y > hit.transform.position.y + hit.gameObject.GetComponent<IEnemy>().m_heightoffset)
-            //    {
-            //        velocity.x = velocity.x * 0.5f;
-            //    }
-            //}
-                //trap check and underAttack check
-                if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
+            //shovel jump check
+            if (hit.collider.tag == "Shovel")
+            {
+                Debug.Log("shovel jump!");
+                velocity.y = m_shovelPulloutVelocity;
+            }
+            //trap check and underAttack check
+            if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
             {
                 if (!m_godenFinger)
                 {

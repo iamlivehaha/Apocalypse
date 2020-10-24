@@ -12,6 +12,7 @@ TagManager:
   - Ground
   - Weapon
   - Bro
+  - Shovel
   layers:
   - Default
   - TransparentFX

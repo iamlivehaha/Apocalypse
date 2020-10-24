@@ -15,6 +15,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         private Quaternion lookRot;
         [Header("Shovel Attack Setting")]
         public BoxCollider m_WeaponCollider;
+        public BoxCollider m_WeaponStickCollider;
         public Transform m_shovelPosition;
         public float m_shovelPulloutVelocity;
 
@@ -55,7 +56,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         {
             base.Update();
             //check attack angle
-            if (!isBlock)
+            if (!isBlock||bTargetInAttackRange)
             {
                 LookTarget(m_target.transform);
             }
@@ -75,6 +76,17 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
             //set weapon collider
             m_WeaponCollider.enabled = m_animator.GetCurrentAnimatorStateInfo(0).IsName("attack");
+            if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("attack")
+                || m_animator.GetCurrentAnimatorStateInfo(0).IsName("pull")
+                || m_animator.GetCurrentAnimatorStateInfo(0).IsName("pullout"))
+            {
+                m_WeaponStickCollider.enabled = true;
+            }
+            else
+            {
+                m_WeaponStickCollider.enabled = false;
+            }
+
         }
 
         private void CheckAttackAngle()
@@ -117,8 +129,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 if (bTargetInAttackRange)//attack and rest for a interval
                 {
                     CheckAttackAngle();
+                    m_WeaponStickCollider.enabled = true;
                     m_animator.SetTrigger("attack");
                     yield return new WaitForSeconds(m_attackInterval);
+                    m_WeaponStickCollider.enabled = false; 
                     isBlock = false;
                     m_animator.SetBool("isblock", isBlock);
                 }
