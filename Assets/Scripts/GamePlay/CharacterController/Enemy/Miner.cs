@@ -69,6 +69,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                     PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
                 }
             }
+            //set weapon collider
+            m_WeaponCollider.enabled = m_animator.GetCurrentAnimatorStateInfo(0).IsName("attack");
         }
 
         private void CheckAttackAngle()
@@ -110,12 +112,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 }
                 if (bTargetInAttackRange)//attack and rest for a interval
                 {
-                    m_WeaponCollider.enabled = true;
                     CheckAttackAngle();
                     m_animator.SetTrigger("attack");
-                    yield return new WaitForSeconds(m_attackInterval*0.5f);
-                    m_WeaponCollider.enabled = false;
-                    yield return new WaitForSeconds(m_attackInterval * 0.5f);
+                    yield return new WaitForSeconds(m_attackInterval);
                     isBlock = false;
                     m_animator.SetBool("isblock", isBlock);
                 }
