@@ -42,6 +42,7 @@ namespace Assets.Scripts.Managers
         {
             SetMoveEnable(false);
             m_playerGO.transform.position = spawnpoint.position+new Vector3(0,0.5f,0);
+            EnemyManager.Instance().ResetEnemy();
             //m_playerGO.GetComponent<PlayerMoveController>().AwakenPlayer();
             yield return new WaitForSeconds(2f);//wait for death and spawn animation
             m_moveCtrl.velocity = Vector3.zero;

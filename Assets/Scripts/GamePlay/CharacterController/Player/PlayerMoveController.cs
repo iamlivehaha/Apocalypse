@@ -384,7 +384,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 case PlayerState.Death:
                     stateName = "death";
                     m_animator.SetTrigger(stateName);
-                    StartCoroutine(StartDeath());
+                    if (!m_godenFinger)
+                    {
+                        StartCoroutine(StartDeath());
+                    }
                     break;
                 default:
                     break;
