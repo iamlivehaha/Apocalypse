@@ -959,6 +959,7 @@ MonoBehaviour:
   m_arrowCol: {fileID: 0}
   m_rigidbody: {fileID: 0}
   m_animator: {fileID: 0}
+  m_bDestory: 1
   m_shootVelocity: 0.4
   m_destroyTime: 10
   m_isHit: 0

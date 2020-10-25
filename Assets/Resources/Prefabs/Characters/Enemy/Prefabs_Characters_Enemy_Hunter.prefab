@@ -593,7 +593,7 @@ MonoBehaviour:
   m_chasingSpeed: 2
   m_confusingTime: 2
   m_isConfusing: 0
-  m_attackInterval: 4
+  m_attackInterval: 3
   m_viewDistance: 50
   m_viewAngle: 180
   m_heightoffset: 3
@@ -606,6 +606,7 @@ MonoBehaviour:
   mDefaultDirection: {x: 0, y: 0, z: 0}
   Attackoffset_left: 16
   Attackoffset_right: 25
+  mattackTempInterval: 0
 --- !u!1 &1776229416458559185
 GameObject:
   m_ObjectHideFlags: 0

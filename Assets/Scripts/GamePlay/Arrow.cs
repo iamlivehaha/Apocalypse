@@ -18,6 +18,7 @@ namespace Assets.Scripts.GamePlay
         public Animator m_animator;
 
         [Header("Physic Property")]
+        public bool m_bDestory;
         public float m_shootVelocity;
         public float m_destroyTime = 10f;
         public bool m_isHit = false;
@@ -102,11 +103,14 @@ namespace Assets.Scripts.GamePlay
 
         IEnumerator DestoryArrow(float destoryTime)
         {
-            m_arrowCol.enabled = false;
-            yield return new WaitForSeconds(destoryTime - destoryAnimPlayTime);
-            m_animator.SetTrigger("break");
-            yield return new WaitForSeconds(destoryAnimPlayTime);
-            Destroy(gameObject);
+            if (m_bDestory)
+            {
+                m_arrowCol.enabled = false;
+                yield return new WaitForSeconds(destoryTime - destoryAnimPlayTime);
+                m_animator.SetTrigger("break");
+                yield return new WaitForSeconds(destoryAnimPlayTime);
+                Destroy(gameObject);
+            }
         }
     }
 }

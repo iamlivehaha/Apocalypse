@@ -9,9 +9,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
     {
         public float Attackoffset_left;
         public float Attackoffset_right;
+        private Quaternion shootlookRot;
         private float Attackoffset;
         private Quaternion lookRot;
         private bool isAttack = false;
+        public float mattackTempInterval;
 
         // Start is called before the first frame update
         public override void Init()
@@ -36,6 +38,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
             // property setting
             m_animator.SetBool("bpatrol", bPatrol);
+            mattackTempInterval = m_attackInterval-1;
             if (m_defaultDir == DefaultDirection.Right)
             {
                 Attackoffset = Attackoffset_right;
@@ -46,6 +49,20 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             }
         }
 
+        public void FixedUpdate()
+        {
+            if (isAttack)
+            {
+                if (Mathf.Abs(mattackTempInterval) <= 0.1f)
+                {
+                    bool isleft = !(m_target.transform.position.x - transform.position.x > 0);
+                    m_weapon.Attack(m_target.gameObject, isleft ? lookRot : shootlookRot);
+                    isAttack = false;
+                    mattackTempInterval = m_attackInterval;
+                }
+                mattackTempInterval -= Time.fixedDeltaTime;
+            }
+        }
         // Update is called once per frame
         protected override void Update()
         {
@@ -55,6 +72,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 LookTarget(m_target.transform.position + new Vector3(0, 1.5f, 0));
             }
 
+            if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("startattack"))
+            {
+                isAttack = true;
+            }
         }
 
         private void LookTarget(Vector3 mTargetPos)
@@ -68,26 +89,31 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
         IEnumerator StartAttack(Transform mTarget)
         {
-
+            shootlookRot = Quaternion.AngleAxis(180 - lookRot.eulerAngles.z, Vector3.forward);
+            if (!isAttack)
+            {
+                bool isleft = !(m_target.transform.position.x - transform.position.x > 0);
+                m_weapon.Attack(m_target.gameObject, isleft ? lookRot : shootlookRot);
+            }
             while (true)
             {
                 if (!bTargetInView)
                 {
                     //m_weapon.transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
                     isAttack = false;
+                    mattackTempInterval = m_attackInterval;
                     yield break;
                 }
                 if (bTargetInAttackRange)//attack and rest for a interval
                 {
                     m_animator.SetTrigger("attack");
                     //todo arrow attack 
-                    bool isleft = !(mTarget.transform.position.x - transform.position.x > 0);
-                    Quaternion shootlookRot = Quaternion.AngleAxis(180-lookRot.eulerAngles.z,Vector3.forward);
-                    m_weapon.Attack(m_target.gameObject, isleft?lookRot:shootlookRot);
+                    shootlookRot = Quaternion.AngleAxis(180-lookRot.eulerAngles.z,Vector3.forward);
                     yield return new WaitForSeconds(m_attackInterval);
                 }
                 else
                 {
+                    Debug.Log("attack end");
                     yield break;
                 }
 
