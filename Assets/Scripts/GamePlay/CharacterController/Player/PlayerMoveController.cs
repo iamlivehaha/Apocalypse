@@ -67,6 +67,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
 
         [Header("Public, Re spawn Property")]
         public float m_deathTime = 3;
+        private float m_deathTimeScale = 0.3f;
         public Transform m_currentSP;
         public List<int> m_collectBro = new List<int>();
         //public bool isdying = false;
@@ -455,7 +456,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
         IEnumerator StartDeath()
         {
             SetMoveEnable(false);
-            Time.timeScale = 0.3f;
+            Time.timeScale = m_deathTimeScale;
             yield return new WaitForSeconds(m_deathTime * Time.timeScale);
             PlayerManager playerManager = PlayerManager.Instance();
             playerManager.SpawnPlayer(m_currentSP);

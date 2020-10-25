@@ -7,7 +7,9 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 {
     public class Hunter : IEnemy
     {
-        public float Attackoffset = 5;
+        public float Attackoffset_left;
+        public float Attackoffset_right;
+        private float Attackoffset;
         private Quaternion lookRot;
         private bool isAttack = false;
 
@@ -36,11 +38,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_animator.SetBool("bpatrol", bPatrol);
             if (m_defaultDir == DefaultDirection.Right)
             {
-                Attackoffset = 25;
+                Attackoffset = Attackoffset_right;
             }
             else
             {
-                Attackoffset = 16;
+                Attackoffset = Attackoffset_left;
             }
         }
 
@@ -86,7 +88,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 }
                 else
                 {
-                    yield return null;
+                    yield break;
                 }
 
             }

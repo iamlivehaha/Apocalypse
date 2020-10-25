@@ -21,7 +21,7 @@ namespace Assets.Scripts.GamePlay
         public float m_shootVelocity;
         public float m_destroyTime = 10f;
         public bool m_isHit = false;
-        public float destoryAnimPlayTime = 0.5f;//wait until anim play finished
+        public float destoryAnimPlayTime;//wait until anim play finished
         public Vector3 m_arrowJumpVelocity;
 
 
