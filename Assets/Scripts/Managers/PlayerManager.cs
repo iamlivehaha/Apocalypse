@@ -44,6 +44,7 @@ namespace Assets.Scripts.Managers
             m_playerGO.transform.position = spawnpoint.position+new Vector3(0,0.5f,0);
             //m_playerGO.GetComponent<PlayerMoveController>().AwakenPlayer();
             yield return new WaitForSeconds(2f);//wait for death and spawn animation
+            m_moveCtrl.velocity = Vector3.zero;
             m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Idle);
             SetMoveEnable(true);
             yield break;

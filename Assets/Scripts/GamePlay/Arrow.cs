@@ -21,7 +21,7 @@ namespace Assets.Scripts.GamePlay
         public float m_shootVelocity;
         public float m_destroyTime = 10f;
         public bool m_isHit = false;
-        public float destoryAnimPlayTime = 1.2f;//wait until anim play finished
+        public float destoryAnimPlayTime = 0.5f;//wait until anim play finished
         public Vector3 m_arrowJumpVelocity;
 
 
@@ -71,25 +71,31 @@ namespace Assets.Scripts.GamePlay
             {
                 m_isHit = true;
                 Debug.Log("hit! Player in " + col.transform.position.y + "Arrow in " + transform.position.y);
-                if (Mathf.Abs(col.transform.position.y-m_head.position.y)<=3f&&
-                    Mathf.Abs(col.transform.position.x - m_head.position.x) <= 1.5f)
-                {
+                //if (Mathf.Abs(col.transform.position.y-m_head.position.y)<=3f&&
+                //    Mathf.Abs(col.transform.position.x - m_head.position.x) <= 1.5f)
+                //{
                     PlayerManager.Instance().m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Death);
-                }
-                else if (col.transform.position.y >= transform.position.y)
-                {
-                    PlayerManager.Instance().m_moveCtrl.velocity = m_arrowJumpVelocity;
-                }
+                //}
+                //else if (col.transform.position.y >= transform.position.y)
+                //{
+                //    PlayerManager.Instance().m_moveCtrl.velocity = m_arrowJumpVelocity;
+                //}
                 StartCoroutine(DestoryArrow(destoryAnimPlayTime));
+            }
+            else if(col.transform.tag == "Player" && m_isHit)
+            {
+                PlayerManager.Instance().m_moveCtrl.velocity = m_arrowJumpVelocity;
+                m_animator.SetTrigger("hit");
             }
         }
 
         IEnumerator HitGround()
         {
             transform.position = transform.position;
-            m_animator.SetBool("isHit",m_isHit);
+            m_animator.SetBool("isHit",true);
             m_animator.SetTrigger("hit");
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
+            m_animator.SetBool("isHit", false);
             StartCoroutine(DestoryArrow(m_destroyTime));
         }
 
