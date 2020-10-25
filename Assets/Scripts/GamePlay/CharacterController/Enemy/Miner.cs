@@ -17,6 +17,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         public BoxCollider m_WeaponCollider;
         public BoxCollider m_WeaponStickCollider;
         public Transform m_shovelPosition;
+        public SkeletonUtilityBone m_skeletonUtilityBone;
         public float m_shovelPulloutVelocity;
         private bool m_pulloutJump;
         public float m_pulloutJumpTime;
@@ -31,6 +32,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_rigidbody = GetComponent<Rigidbody>();
             m_skeletonComponent = transform.Find("Visuals/Miner").GetComponent<ISkeletonComponent>();
             m_target = GameObject.FindGameObjectWithTag("Player").transform;
+            m_skeletonUtilityBone = m_weapon.gameObject.GetComponent<SkeletonUtilityBone>();
+            m_skeletonUtilityBone.overrideAlpha = 0.4f;
 
             if (m_WeaponCollider==null)
             {
@@ -85,14 +88,15 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         public void FixedUpdate()
         {
+            //Debug.Log(m_weapon.transform.rotation.eulerAngles);
             if (m_pulloutJump)
             {
                 if (Mathf.Abs(mpulloutJumpTempTime) <= 0.1f)
                 {
                     //check position and add velocity
                     Vector3 playerPos = PlayerManager.Instance().m_moveCtrl.transform.position;
-                    if (Mathf.Abs(playerPos.y - m_shovelPosition.position.y) <= 1.5f
-                        && Mathf.Abs(playerPos.x - m_shovelPosition.position.x) <= 2f)
+                    if (Mathf.Abs(playerPos.y - m_shovelPosition.position.y) <= 2f
+                        && Mathf.Abs(playerPos.x - m_shovelPosition.position.x) <= 3f)
                     {
                         Debug.Log("Pull Out! " + playerPos.y + "VS " + m_shovelPosition.position.y);
                         PlayerManager.Instance().m_moveCtrl.velocity.y = m_shovelPulloutVelocity;
@@ -207,7 +211,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             Vector3 attackDir = (mTarget.position - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
             angle = Mathf.Clamp(angle, 0, 5);
-            Debug.Log(angle);
+            //Debug.Log(angle);
             //float dir = (mTarget.position - transform.position).normalized.x;
             if (m_defaultDir==DefaultDirection.Right)
             {
@@ -218,7 +222,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
             }
             //m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
-            m_weapon.transform.rotation = lookRot;
+            m_weapon.transform.rotation = lookRot;  
+        }
+
+        public void OnDestroy()
+        {
         }
     }
 }

@@ -5046,13 +5046,13 @@ MonoBehaviour:
   m_jumpSpeed: 27
   m_minimumJumpDuration: 0.5
   m_jumpInterruptFactor: 0.5
-  m_forceCrouchVelocity: 50
-  m_forceCrouchDuration: 0.5
+  m_forceCrouchVelocity: 0
+  m_forceCrouchDuration: 0
   m_airControl: 0.8
   m_crouchControl: 0.5
-  m_wallJumpUpSpeed: 30
-  m_wallJumpBounceVelocity: 7
-  m_wallJumpMaskInputXTime: 0.6
+  m_wallJumpUpSpeed: 25
+  m_wallJumpBounceVelocity: 10
+  m_wallJumpMaskInputXTime: 0.5
   m_forceWallJumpVelocity: 0.5
   m_shovelPulloutVelocity: 50
   m_interactableRadius: 0.5
@@ -5080,8 +5080,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.63826174, z: 1}
-  m_Center: {x: 0, y: 0.10200927, z: 0}
+  m_Size: {x: 1.306987, y: 3.6519513, z: 1}
+  m_Center: {x: 0.08865893, y: 1.0764458, z: 0}
 --- !u!54 &1927883663
 Rigidbody:
   m_ObjectHideFlags: 0

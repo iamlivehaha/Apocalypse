@@ -121,21 +121,21 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         protected virtual void Update()
         {
             //return to idle state and come back to default position
-            if (!bPatrol)
-            {
-                Vector3 diretion = (m_defaultPosition.position - transform.position);
-                m_animator.SetFloat("idleDir", diretion.x);
+            //if (!bPatrol)
+            //{
+            //    Vector3 diretion = (m_defaultPosition.position - transform.position);
+            //    m_animator.SetFloat("idleDir", diretion.x);
 
-                //check target in patrol states
-                bTargetInView = ViewCheck(Mathf.Abs(diretion.x) >= 0.2f ? diretion : mForWardDirection);
+            //    //check target in patrol states
+            //    bTargetInView = ViewCheck(Mathf.Abs(diretion.x) >= 0.2f ? diretion : mForWardDirection);
                 
-                if ( currentState == EnemyState.Idle)
-                {
-                    FlipXCharacter(Mathf.Abs(diretion.x) >= 0.2f ? diretion.x : mForWardDirection.x);
-                    diretion.x = Mathf.Abs(diretion.x) >= 0.2f ? diretion.normalized.x : 0;
-                    Move(diretion, Gravity());
-                }
-            }
+            //    if ( currentState == EnemyState.Idle)
+            //    {
+            //        FlipXCharacter(Mathf.Abs(diretion.x) >= 0.2f ? diretion.x : mForWardDirection.x);
+            //        diretion.x = Mathf.Abs(diretion.x) >= 0.2f ? diretion.normalized.x : 0;
+            //        Move(diretion, Gravity());
+            //    }
+            //}
             //determine line when return to patrol 
             if (bPatrol && previousState == EnemyState.Confusing)
             {
@@ -166,7 +166,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 mForWardDirection = new Vector3(m_currentDestination.position.x - transform.position.x, 0, 0);
             }
             //check target in patrol states
-            Vector3 fwd = Mathf.Abs(mForWardDirection.x) >= 0.2f ? mForWardDirection.normalized : mDefaultDirection;
+            Vector3 fwd = Mathf.Abs(mForWardDirection.x) >0.2f ? mForWardDirection.normalized : mDefaultDirection;
             bTargetInView = ViewCheck(fwd);
 
             m_animator.SetFloat("idleDir", mForWardDirection.x);
@@ -281,13 +281,19 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             bool bhit = Physics.Raycast(transform.position + Vector3.up * m_heightoffset, playerDir, out hitInfo, m_viewDistance);
             Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_viewDistance, Color.red);
             Debug.DrawRay(transform.position + Vector3.up * m_heightoffset, playerDir.normalized * m_weapon.m_range, Color.yellow);
-            //Debug.Log("distance"+playerDir.magnitude+"tempangle "+tempangle+"bhit =="+bhit+hitInfo.transform.tag);
+
             if (tempangle < 0.5f * m_viewAngle && (bhit == false || (hitInfo.collider.tag =="Player")))
             {
                 if (playerDir.magnitude <= m_viewDistance)//player detected in view distance
                 {
                     return true;
                 }
+            }
+
+            if (bhit&& tempangle < 10&& hitInfo.transform.tag!="Player"&& playerDir.magnitude <= m_viewDistance)
+            {
+                Debug.Log("distance" + playerDir.magnitude + "tempangle " + tempangle + "bhit ==" + bhit);
+                Debug.Log(hitInfo.transform.tag);
             }
             return false;//被检测物体不在视野中
         }

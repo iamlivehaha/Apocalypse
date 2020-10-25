@@ -60,7 +60,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
 
         [Header("Public, Interactive Property")]
         //public float m_showInteractiveUIRadius = 1.0f;
-        public float m_interactableRadius = 0.5f;
+        public float m_interactableRadius = 1f;
         //public float m_interactableRaycastAngle = 90;
         //public float m_interactableRaycastAngleInterval = 10;
         public LayerMask m_interactableLayer;
