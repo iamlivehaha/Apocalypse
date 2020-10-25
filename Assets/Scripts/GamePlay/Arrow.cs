@@ -86,6 +86,7 @@ namespace Assets.Scripts.GamePlay
             {
                 PlayerManager.Instance().m_moveCtrl.velocity = m_arrowJumpVelocity;
                 m_animator.SetTrigger("hit");
+                StartCoroutine(DestoryArrow(destoryAnimPlayTime));
             }
         }
 
@@ -101,7 +102,7 @@ namespace Assets.Scripts.GamePlay
 
         IEnumerator DestoryArrow(float destoryTime)
         {
-            m_headCol.enabled = false;
+            m_arrowCol.enabled = false;
             yield return new WaitForSeconds(destoryTime - destoryAnimPlayTime);
             m_animator.SetTrigger("break");
             yield return new WaitForSeconds(destoryAnimPlayTime);

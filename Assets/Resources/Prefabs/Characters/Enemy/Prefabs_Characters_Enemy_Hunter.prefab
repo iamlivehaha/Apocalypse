@@ -604,7 +604,8 @@ MonoBehaviour:
   bTargetInAttackRange: 0
   mForWardDirection: {x: 0, y: 0, z: 0}
   mDefaultDirection: {x: 0, y: 0, z: 0}
-  Attackoffset: 15
+  Attackoffset_left: 16
+  Attackoffset_right: 25
 --- !u!1 &1776229416458559185
 GameObject:
   m_ObjectHideFlags: 0
