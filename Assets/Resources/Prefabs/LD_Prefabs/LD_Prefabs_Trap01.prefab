@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7024475269365420713}
   - component: {fileID: 1784502277723233737}
   - component: {fileID: 5930326958323392392}
-  m_Layer: 10
+  m_Layer: 2
   m_Name: LD_Prefabs_Trap01
   m_TagString: Trap
   m_Icon: {fileID: 0}

@@ -36,11 +36,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             m_animator.SetBool("bpatrol", bPatrol);
             if (m_defaultDir == DefaultDirection.Right)
             {
-                Attackoffset = 20;
+                Attackoffset = 25;
             }
             else
             {
-                Attackoffset = 15;
+                Attackoffset = 16;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
         private void LookTarget(Vector3 mTargetPos)
         {
-            Vector3 attackDir = (mTargetPos - transform.position).normalized;
+            Vector3 attackDir = (mTargetPos+Vector3.up - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
             float dir = (mTargetPos - transform.position).normalized.x;
             lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
