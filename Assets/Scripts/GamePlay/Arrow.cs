@@ -22,6 +22,7 @@ namespace Assets.Scripts.GamePlay
         public float m_destroyTime = 10f;
         public bool m_isHit = false;
         public float destoryAnimPlayTime = 1.2f;//wait until anim play finished
+        public Vector3 m_arrowJumpVelocity;
 
 
         void Awake()
@@ -66,13 +67,18 @@ namespace Assets.Scripts.GamePlay
                 m_isHit = true;
                 StartCoroutine(HitGround());
             }
-            else if(col.transform.tag=="Player")
+            else if(col.transform.tag=="Player"&&m_isHit==false)
             {
                 m_isHit = true;
                 Debug.Log("hit! Player in " + col.transform.position.y + "Arrow in " + transform.position.y);
-                if (col.transform.position.y<transform.position.y)
+                if (Mathf.Abs(col.transform.position.y-m_head.position.y)<=3f&&
+                    Mathf.Abs(col.transform.position.x - m_head.position.x) <= 1.5f)
                 {
                     PlayerManager.Instance().m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Death);
+                }
+                else if (col.transform.position.y >= transform.position.y)
+                {
+                    PlayerManager.Instance().m_moveCtrl.velocity = m_arrowJumpVelocity;
                 }
                 StartCoroutine(DestoryArrow(destoryAnimPlayTime));
             }

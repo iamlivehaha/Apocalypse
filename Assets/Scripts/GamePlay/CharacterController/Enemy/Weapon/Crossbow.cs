@@ -13,8 +13,10 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon
         // Start is called before the first frame update
         void Start()
         {
-            m_shootLeftPos = transform.Find("shootLeftPosition");
-            m_shootRightPos = transform.Find("shootRightPosition");
+            if (!m_shootLeftPos|| !m_shootRightPos)
+            {
+                Debug.Log("can not find arrow shoot pos");
+            }
         }
 
         // Update is called once per frame
@@ -45,7 +47,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy.Weapon
             else
             {
                 bool isleft = !(theTarget.transform.position.x - transform.position.x > 0);
-                Instantiate(arrow, isleft ? m_shootLeftPos.position : m_shootRightPos.position, rot);
+                Instantiate(arrow, isleft ? m_shootLeftPos.position : m_shootRightPos.position, isleft ? m_shootLeftPos.rotation : m_shootRightPos.rotation);
             }
 
         }

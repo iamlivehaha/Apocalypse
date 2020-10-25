@@ -213,14 +213,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             angle = Mathf.Clamp(angle, 0, 5);
             //Debug.Log(angle);
             //float dir = (mTarget.position - transform.position).normalized.x;
-            if (m_defaultDir==DefaultDirection.Right)
-            {
-                lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
-            }
-            else
-            {
-                lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
-            }
+            lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
             //m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime);
             m_weapon.transform.rotation = lookRot;  
         }

@@ -290,11 +290,11 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
                 }
             }
 
-            if (bhit&& tempangle < 10&& hitInfo.transform.tag!="Player"&& playerDir.magnitude <= m_viewDistance)
-            {
-                Debug.Log("distance" + playerDir.magnitude + "tempangle " + tempangle + "bhit ==" + bhit);
-                Debug.Log(hitInfo.transform.tag);
-            }
+            //if (bhit&& tempangle < 10&& hitInfo.transform.tag!="Player"&& playerDir.magnitude <= m_viewDistance)
+            //{
+            //    Debug.Log("distance" + playerDir.magnitude + "tempangle " + tempangle + "bhit ==" + bhit);
+            //    Debug.Log(hitInfo.transform.tag);
+            //}
             return false;//被检测物体不在视野中
         }
         private void FlipXCharacter(float x_value)

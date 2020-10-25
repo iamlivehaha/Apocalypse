@@ -34,13 +34,25 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
 
             // property setting
             m_animator.SetBool("bpatrol", bPatrol);
+            if (m_defaultDir == DefaultDirection.Right)
+            {
+                Attackoffset = 20;
+            }
+            else
+            {
+                Attackoffset = 15;
+            }
         }
 
         // Update is called once per frame
         protected override void Update()
         {
             base.Update();
-            LookTarget(m_target.transform.position+new Vector3(0,1,0));
+            if (bTargetInView)
+            {
+                LookTarget(m_target.transform.position + new Vector3(0, 1.5f, 0));
+            }
+
         }
 
         private void LookTarget(Vector3 mTargetPos)
@@ -48,14 +60,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
             Vector3 attackDir = (mTargetPos - transform.position).normalized;
             float angle = Vector3.Angle(new Vector3(attackDir.x > 0 ? 1 : -1, 0, 0), attackDir);
             float dir = (mTargetPos - transform.position).normalized.x;
-            if (m_defaultDir == DefaultDirection.Right)
-            {
-                lookRot = Quaternion.AngleAxis(dir > 0 ? -angle + Attackoffset : Attackoffset - angle , Vector3.forward);
-            }
-            else
-            {
-                lookRot = Quaternion.AngleAxis(dir > 0 ? Attackoffset - angle : -angle + Attackoffset, Vector3.forward);
-            }
+            lookRot = Quaternion.AngleAxis(Attackoffset - angle, Vector3.forward);
             m_weapon.transform.rotation = Quaternion.Slerp(m_weapon.transform.rotation, lookRot, Time.deltaTime*2);
             //m_weapon.transform.rotation = rot;
         }
