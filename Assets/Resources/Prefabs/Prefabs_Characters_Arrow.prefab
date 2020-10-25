@@ -961,7 +961,7 @@ MonoBehaviour:
   m_animator: {fileID: 0}
   m_bDestory: 1
   m_shootVelocity: 0.4
-  m_destroyTime: 10
+  m_destroyTime: 3
   m_isHit: 0
   destoryAnimPlayTime: 1
   m_arrowJumpVelocity: {x: 0, y: 40, z: 0}
