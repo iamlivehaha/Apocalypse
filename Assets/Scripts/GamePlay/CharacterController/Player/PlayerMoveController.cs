@@ -134,7 +134,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     coliders.Add(hitColliders[i]);
                 }
             }
-
+            //awaken move disable
+            m_isMove = !m_animator.GetCurrentAnimatorStateInfo(0).IsName("Awake");
 
 
             #endregion
@@ -425,12 +426,7 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     m_isWallJump = true;
                 }
             }
-            ////shovel jump check
-            //if (hit.collider.tag == "Shovel")
-            //{
-            //    Debug.Log("shovel jump!");
-            //    velocity.y = m_shovelPulloutVelocity;
-            //}
+
             //trap check and underAttack check
             if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
             {
@@ -454,6 +450,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                     Debug.Log("Update spawn point!");
                     m_currentSP = col.transform;
                 }
+            }
+            //End point check
+            if (col.transform.tag == "EndPoint")
+            {
+                Debug.Log("End Game and Loop");
+                PlayerManager.Instance().AwakenPlayer();
             }
         }
         IEnumerator StartDeath()

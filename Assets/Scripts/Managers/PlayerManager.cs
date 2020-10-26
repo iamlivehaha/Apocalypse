@@ -16,6 +16,7 @@ namespace Assets.Scripts.Managers
         List<GameObject> spawnpoints = new List<GameObject>();
         [SerializeField]
         public Transform m_defaultSP;
+        public Transform m_initSpawnPoint;
 
         public override void SingletonInit()
         {
@@ -26,6 +27,10 @@ namespace Assets.Scripts.Managers
             }
 
             m_defaultSP = spawnpoints[0].transform;
+            if (m_initSpawnPoint==null)
+            {
+                m_initSpawnPoint = m_defaultSP;
+            }
             m_moveCtrl = m_playerGO.GetComponent<PlayerMoveController>();
         }
 
@@ -37,6 +42,10 @@ namespace Assets.Scripts.Managers
             }
             StartCoroutine(Spawn(spawnpoint));
         }
+        public void AwakenPlayer()
+        {
+            StartCoroutine(Awaken());
+        }
 
         IEnumerator Spawn(Transform spawnpoint)
         {
@@ -45,6 +54,23 @@ namespace Assets.Scripts.Managers
             EnemyManager.Instance().ResetEnemy();
             //m_playerGO.GetComponent<PlayerMoveController>().AwakenPlayer();
             yield return new WaitForSeconds(2f);//wait for death and spawn animation
+            m_moveCtrl.velocity = Vector3.zero;
+            m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Idle);
+            SetMoveEnable(true);
+            yield break;
+        }
+
+        IEnumerator Awaken()
+        {
+            SetMoveEnable(false);
+            m_playerGO.transform.position = m_initSpawnPoint.position + new Vector3(0, 0.5f, 0);
+            EnemyManager.Instance().ResetEnemy();
+            UIManager uiManager = UIManager.Instance();
+            m_playerGO.GetComponent<PlayerMoveController>().AwakenPlayer();
+            uiManager.PlayTransitionScene(uiManager.m_AwakenStroy);
+            SetMoveEnable(false);
+            yield return  new WaitForSeconds(uiManager.m_trainsitionTime);
+            yield return new WaitForSeconds(3f);//wait for death and spawn animation
             m_moveCtrl.velocity = Vector3.zero;
             m_moveCtrl.ChangeState(PlayerMoveController.PlayerState.Idle);
             SetMoveEnable(true);

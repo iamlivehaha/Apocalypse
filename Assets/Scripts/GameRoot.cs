@@ -14,6 +14,7 @@ namespace Assets.Scripts
 
         private AudioManager m_audioManager;
         private PlayerManager m_playerManager;
+        private UIManager m_UIManager;
         //private CameraSys cameraSys;
         //private AISys aiSys;
         //private FurnitureSys furnitureSys;
@@ -25,8 +26,9 @@ namespace Assets.Scripts
         {
             m_audioManager = AudioManager.Instance();
             m_playerManager = PlayerManager.Instance();
+            m_UIManager = UIManager.Instance();
             //InitManager();
-
+            m_UIManager.PlayTransitionScene(m_UIManager.m_StartStroy);
         }
 
         // Update is called once per frame

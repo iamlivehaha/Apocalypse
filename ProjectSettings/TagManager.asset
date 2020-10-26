@@ -13,6 +13,8 @@ TagManager:
   - Weapon
   - Bro
   - Shovel
+  - Subtitle
+  - EndPoint
   layers:
   - Default
   - TransparentFX
