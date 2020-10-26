@@ -685,30 +685,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 53593413, guid: 3677a17fbfce93b49bf604b0733ca01e, type: 3}
-      propertyPath: m_stancePlayTime
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 53593413, guid: 3677a17fbfce93b49bf604b0733ca01e, type: 3}
-      propertyPath: m_crossFadeAlphaTime
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 53593413, guid: 3677a17fbfce93b49bf604b0733ca01e, type: 3}
-      propertyPath: m_trainsitionTime
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 143162314, guid: 3677a17fbfce93b49bf604b0733ca01e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 7.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 143162314, guid: 3677a17fbfce93b49bf604b0733ca01e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 566
-      objectReference: {fileID: 0}
-    - target: {fileID: 143162315, guid: 3677a17fbfce93b49bf604b0733ca01e, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 913377864869000611, guid: 3677a17fbfce93b49bf604b0733ca01e,
         type: 3}
       propertyPath: m_Name

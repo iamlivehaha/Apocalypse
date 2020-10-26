@@ -5,6 +5,7 @@ using Assets.Scripts.Managers;
 using StarPlatinum.Base;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class UIManager : MonoSingleton<UIManager>
 {
@@ -14,6 +15,7 @@ public class UIManager : MonoSingleton<UIManager>
     public List<string> m_AwakenStroy = new List<string>();
     public Text m_UIText;
     public Image m_sceneTransition;
+    public VideoPlayer videoPlayer;
 
     public float m_stancePlayTime;
     public float m_crossFadeAlphaTime;
@@ -50,6 +52,19 @@ public class UIManager : MonoSingleton<UIManager>
             StartCoroutine(PlayStory(storytoPlay));
         }
     }
+
+    public void PlayMovie()
+    {
+        videoPlayer.loopPointReached += VideoPlayer_loopPointReached; ;
+    }
+
+    private void VideoPlayer_loopPointReached(VideoPlayer source)
+    {
+        //End Reached
+        //todo awke player
+    }
+
+
 
     IEnumerator PlayStory(List<string> m_story)
     {

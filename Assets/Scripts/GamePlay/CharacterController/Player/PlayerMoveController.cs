@@ -427,8 +427,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
                 }
             }
 
-            //trap check and underAttack check
-            if (hit.collider.tag == "Trap" || hit.collider.tag == "Weapon")
+            // underAttack check
+            if (hit.collider.tag == "Weapon")
             {
                 if (!m_godenFinger)
                 {
@@ -454,8 +454,20 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             //End point check
             if (col.transform.tag == "EndPoint")
             {
+                velocity = Vector3.zero;
                 Debug.Log("End Game and Loop");
                 PlayerManager.Instance().AwakenPlayer();
+            }
+
+            //trap check 
+            if (col.transform.tag == "Trap")
+            {
+                if (!m_godenFinger)
+                {
+                    Debug.Log("you die!");
+                    ChangeState(PlayerState.Death);
+                }
+
             }
         }
         IEnumerator StartDeath()
