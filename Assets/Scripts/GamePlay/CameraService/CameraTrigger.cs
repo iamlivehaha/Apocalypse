@@ -25,10 +25,10 @@ namespace Assets.Scripts.GamePlay.CameraService
             {
                 CameraManager.Instance().SetCameraSetting(m_triggerCameraSetting);
             }
-            else
-            {
-                CameraManager.Instance().ReturnDefaultSetting();
-            }
+            //else
+            //{
+            //    CameraManager.Instance().ReturnDefaultSetting();
+            //}
 
 
         }
