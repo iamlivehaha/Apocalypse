@@ -2,6 +2,7 @@
 using StarPlatinum.Base;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 
 namespace Assets.Scripts
 {
@@ -24,6 +25,7 @@ namespace Assets.Scripts
 
         void Start()
         {
+            Cursor.visible = false;
             m_audioManager = AudioManager.Instance();
             m_playerManager = PlayerManager.Instance();
             m_UIManager = UIManager.Instance();
