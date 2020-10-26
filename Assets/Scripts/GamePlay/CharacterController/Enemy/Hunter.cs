@@ -89,12 +89,12 @@ namespace Assets.Scripts.GamePlay.CharacterController.Enemy
         }
         IEnumerator StartAttack(Transform mTarget)
         {
-            shootlookRot = Quaternion.AngleAxis(180 - lookRot.eulerAngles.z, Vector3.forward);
-            if (!isAttack)
-            {
-                bool isleft = !(m_target.transform.position.x - transform.position.x > 0);
-                m_weapon.Attack(m_target.gameObject, isleft ? lookRot : shootlookRot);
-            }
+            //shootlookRot = Quaternion.AngleAxis(180 - lookRot.eulerAngles.z, Vector3.forward);
+            //if (!isAttack)
+            //{
+            //    bool isleft = !(m_target.transform.position.x - transform.position.x > 0);
+            //    m_weapon.Attack(m_target.gameObject, isleft ? lookRot : shootlookRot);
+            //}
             while (true)
             {
                 if (!bTargetInView)
