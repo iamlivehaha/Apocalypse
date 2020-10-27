@@ -117,7 +117,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 303072474}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 34549e74714502749ad9f8e2a3f9a30c, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 1ffcd97950e39d148a0f99d53eebaefb, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -130,14 +130,12 @@ VideoPlayer:
   m_DataSource: 0
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
-  m_TargetAudioSources:
-  - {fileID: 0}
-  m_DirectAudioVolumes:
-  - 1
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
   m_Url: 
-  m_EnabledAudioTracks: 01
-  m_DirectAudioMutes: 00
-  m_ControlledAudioTrackCount: 1
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 0
@@ -357,7 +355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1418236924
 RectTransform:
   m_ObjectHideFlags: 0
@@ -548,7 +546,7 @@ MonoBehaviour:
   m_AwakenStroy: []
   m_UIText: {fileID: 143162315}
   m_sceneTransition: {fileID: 1520202000}
-  videoPlayer: {fileID: 0}
+  videoPlayer: {fileID: 1418236923}
   m_stancePlayTime: 3
   m_crossFadeAlphaTime: 0.2
   m_trainsitionTime: 1.2

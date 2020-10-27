@@ -15,7 +15,7 @@ public class UIManager : MonoSingleton<UIManager>
     public List<string> m_AwakenStroy = new List<string>();
     public Text m_UIText;
     public Image m_sceneTransition;
-    public VideoPlayer videoPlayer;
+    public GameObject videoPlayer;
 
     public float m_stancePlayTime;
     public float m_crossFadeAlphaTime;
@@ -25,6 +25,7 @@ public class UIManager : MonoSingleton<UIManager>
     {
         m_UIText = GameObject.FindGameObjectWithTag("Subtitle").GetComponent<Text>();
         m_UIText.CrossFadeAlpha(0, m_crossFadeAlphaTime, false);
+        videoPlayer.SetActive(false);
 
         m_StartStroy.Add("好孤独…");
         m_StartStroy.Add("我听说在很久以前");
@@ -55,14 +56,17 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void PlayMovie()
     {
-        videoPlayer.loopPointReached += VideoPlayer_loopPointReached; ;
+        videoPlayer.SetActive(true);
+        //videoPlayer.GetComponent<VideoPlayer>().loopPointReached += VideoPlayer_loopPointReached; ;
     }
 
-    private void VideoPlayer_loopPointReached(VideoPlayer source)
-    {
-        //End Reached
-        //todo awke player
-    }
+    //private void VideoPlayer_loopPointReached(VideoPlayer source)
+    //{
+    //    //End Reached
+    //    //todo awke player
+    //    videoPlayer.SetActive(false);
+    //    PlayerManager.Instance().AwakenPlayer();
+    //}
 
 
 

@@ -456,7 +456,8 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             {
                 velocity = Vector3.zero;
                 Debug.Log("End Game and Loop");
-                PlayerManager.Instance().AwakenPlayer();
+                UIManager.Instance().PlayMovie();
+                StartCoroutine(AwakenPlayer());
             }
 
             //trap check 
@@ -498,11 +499,16 @@ namespace Assets.Scripts.GamePlay.CharacterController.Player
             m_isMove = isEnable;
         }
 
-
-        public void AwakenPlayer()
+        public void AwakePlayer()
         {
-            Debug.Log("respawn");
             m_animator.SetTrigger("awake");
+        }
+
+        public IEnumerator AwakenPlayer()
+        {
+            yield return new WaitForSeconds(6);
+            UIManager.Instance().videoPlayer.SetActive(false);
+           PlayerManager.Instance().AwakenPlayer();
         }
     }
 };

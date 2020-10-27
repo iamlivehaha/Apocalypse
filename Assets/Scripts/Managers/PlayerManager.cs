@@ -66,7 +66,7 @@ namespace Assets.Scripts.Managers
             m_playerGO.transform.position = m_initSpawnPoint.position + new Vector3(0, 0.5f, 0);
             EnemyManager.Instance().ResetEnemy();
             UIManager uiManager = UIManager.Instance();
-            m_playerGO.GetComponent<PlayerMoveController>().AwakenPlayer();
+            m_playerGO.GetComponent<PlayerMoveController>().AwakePlayer();
             uiManager.PlayTransitionScene(uiManager.m_AwakenStroy);
             SetMoveEnable(false);
             yield return  new WaitForSeconds(uiManager.m_trainsitionTime);
